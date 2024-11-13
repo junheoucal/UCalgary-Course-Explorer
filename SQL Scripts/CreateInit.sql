@@ -1,3 +1,4 @@
+CREATE DATABASE coursedb;
 USE coursedb;
 CREATE TABLE Course (
 	CourseID char(7) NOT NULL PRIMARY KEY,
@@ -6,15 +7,12 @@ CREATE TABLE Course (
 	Course_Description LONGTEXT,
 	Credits INT(255) NOT NULL,
 	Department_Name varchar(255) NOT NULL,
-	Concentration_Name varchar(255),
-    FOREIGN KEY (Department_Name)
-		REFERENCES Department(Department_Name)
-        ON DELETE CASCADE	ON UPDATE CASCADE
+	Concentration_Name varchar(255)
 );
 
 CREATE TABLE Lecture (
+	LectureID char(8) NOT NULL PRIMARY KEY,
 	CourseID char(7) NOT NULL,
-	ProfessorID char(8) NOT NULL,
 	Enrollment_Limit INT(255),
 	Enrollment_Current_Number INT(255),
 	Building_Name varchar(255),
@@ -24,10 +22,6 @@ CREATE TABLE Lecture (
 	Start_time TIME,
 	End_time TIME,
     FOREIGN KEY(CourseID) REFERENCES Course(CourseID)
-		ON DELETE CASCADE	ON UPDATE CASCADE,
-	FOREIGN KEY(ProfessorID) REFERENCES Professor(ProfessorID)
-		ON DELETE CASCADE	ON UPDATE CASCADE,
-	FOREIGN KEY(Semester_Name) REFERENCES Semester(Semester_Name) 
 		ON DELETE CASCADE	ON UPDATE CASCADE
 );
 
@@ -37,7 +31,7 @@ CREATE TABLE IT (
 );
 
 CREATE TABLE Professor (
-	ProfessorID char(8) NOT NULL PRIMARY KEY,
+	Professor_ID char(8) NOT NULL PRIMARY KEY,
 	Email varchar(255),
 	Phone_Number varchar(255),
 	Academic_Rank varchar(255) NOT NULL,
@@ -46,8 +40,7 @@ CREATE TABLE Professor (
 	First_Name varchar(255) NOT NULL,
 	Last_Name varchar(255) NOT NULL,
 	Date_of_Birth DATE,
-	Department_Name varchar(255) NOT NULL,
-    FOREIGN KEY (Department_Name) REFERENCES Department(Department_Name) ON DELETE CASCADE	ON UPDATE CASCADE
+	Department_Name varchar(255) NOT NULL
 );
 
 CREATE TABLE Professor_Research_Area (
@@ -55,18 +48,6 @@ CREATE TABLE Professor_Research_Area (
 	Professor_ID char(8) NOT NULL,
 	Research_Area varchar(255) NOT NULL,
      FOREIGN KEY(Professor_ID) REFERENCES Professor(Professor_ID)
-		ON DELETE CASCADE	ON UPDATE CASCADE
-);
-
-CREATE TABLE Department (
-	Department_Name varchar(255) NOT NULL PRIMARY KEY,
-	Phone_Number varchar(255),
-	Number_of_Faculty INT(255),
-	Email varchar(255),
-	Office_Building varchar(255),
-	Office_Room varchar(255),
-	University_Name varchar(255) NOT NULL,
-    FOREIGN KEY(University_Name) REFERENCES University(University_Name) 
 		ON DELETE CASCADE	ON UPDATE CASCADE
 );
 
@@ -81,6 +62,18 @@ CREATE TABLE University (
 	Province varchar(255),
 	City varchar(255),
 	Postal_Code varchar(7)
+);
+
+CREATE TABLE Department (
+	Department_Name varchar(255) NOT NULL PRIMARY KEY,
+	Phone_Number varchar(255),
+	Number_of_Faculty INT(255),
+	Email varchar(255),
+	Office_Building varchar(255),
+	Office_Room varchar(255),
+	University_Name varchar(255) NOT NULL,
+    FOREIGN KEY(University_Name) REFERENCES University(University_Name) 
+		ON DELETE CASCADE	ON UPDATE CASCADE
 );
 
 CREATE TABLE Admin (
@@ -135,7 +128,7 @@ CREATE TABLE Concentration (
 CREATE TABLE Concentration_req (
 	Concentration_Name varchar(255) NOT NULL,
 	CourseID char(7) NOT NULL,
-    FOREIGN KEY(CouseID) REFERENCES Course(CourseID)
+    FOREIGN KEY(CourseID) REFERENCES Course(CourseID)
 		ON DELETE CASCADE	ON UPDATE CASCADE,
 	FOREIGN KEY(Concentration_Name) REFERENCES Concentration(Concentration_Name) 
 		ON DELETE CASCADE	ON UPDATE CASCADE
@@ -157,15 +150,12 @@ CREATE TABLE Antirequisite (
 );
 
 CREATE TABLE Teaching_Assistant (
-	PRIMARY KEY(Name, CourseID),
 	Name varchar(255) NOT NULL PRIMARY KEY,
-	CourseID char(7) NOT NULL,
-    FOREIGN KEY(CourseID) REFERENCES Course(CourseID)
-		ON DELETE CASCADE	ON UPDATE CASCADE,
 	Email varchar(255)
 );
 
 CREATE TABLE Tutorial (
+	PRIMARY KEY(TutorialNo, CourseID),
 	TutorialNo INT(2) NOT NULL,
 	CourseID char(7) NOT NULL,
     FOREIGN KEY(CourseID) REFERENCES Lecture(CourseID)
@@ -231,7 +221,7 @@ CREATE TABLE Administered_By (
 CREATE TABLE Taken_By (
 	PRIMARY KEY(CourseID, TutorialNo, StudentID),
 	CourseID char(7) NOT NULL,
-    FOREIGN KEY(CourseID) REFERENCES Lecture(CourseID)
+    FOREIGN KEY(CourseID) REFERENCES Lecture(LectureID)
 		ON DELETE CASCADE	ON UPDATE CASCADE,
 	TutorialNo INT(2) NOT NULL,
     FOREIGN KEY(TutorialNo) REFERENCES Tutorial(TutorialNo)
@@ -244,10 +234,10 @@ CREATE TABLE Taken_By (
 CREATE TABLE Assisted_By (
 	PRIMARY KEY(CourseID, TAName),
 	CourseID char(7) NOT NULL,
-	FOREIGN KEY(CourseID) REFERENCES Lecture(CourseID)
+	FOREIGN KEY(CourseID) REFERENCES Lecture(LectureID)
 		ON DELETE CASCADE	ON UPDATE CASCADE,
 	TAName varchar(255) NOT NULL,
-    FOREIGN KEY(TAName) REFERENCES TA(Name)
+    FOREIGN KEY(TAName) REFERENCES Teaching_Assistant(Name)
 		ON DELETE CASCADE	ON UPDATE CASCADE
 );
 
@@ -255,8 +245,8 @@ CREATE TABLE Teaches (
 	PRIMARY KEY(CourseID, Professor_ID),
 	Professor_ID char(8) NOT NULL,
     FOREIGN KEY(Professor_ID) REFERENCES Professor(Professor_ID) ON DELETE CASCADE	ON UPDATE CASCADE,
-	Course_ID char(8) NOT NULL,
-    FOREIGN KEY(Course_ID) REFERENCES Lecture(CourseID)
+	CourseID char(8) NOT NULL,
+    FOREIGN KEY(CourseID) REFERENCES Lecture(LectureID)
 		ON DELETE CASCADE	ON UPDATE CASCADE
 );
 
