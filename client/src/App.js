@@ -4,7 +4,9 @@ import Home from './Home';
 import StudentLogin from './studentpages/Login';
 import ITLogin from './itpages/Login';
 import StudentHome from './studentpages/StudentHome';
-import ITHome from './itpages/ITHome';
+import Course from './itpages/Course';
+import AddCourse from './itpages/AddCourse';
+import UpdateCourse from './itpages/UpdateCourse';
 
 function App() {
   return (
@@ -14,7 +16,9 @@ function App() {
         <Route path="/studentpages/Login" element={<StudentLogin />} />
         <Route path="/itpages/Login" element={<ITLogin />} />
         <Route path="/studentpages/StudentHome" element={<StudentHome />} />
-        <Route path="/itpages/ITHome" element={<ITHome />} />
+        <Route path="/itpages/Course" element={<Course />} />
+        <Route path="/itpages/AddCourse" element={<AddCourse />} />
+        <Route path="/itpages/UpdateCourse/:id" element={<UpdateCourse />} />
       </Routes>
     </BrowserRouter>
   );

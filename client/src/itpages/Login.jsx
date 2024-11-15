@@ -22,7 +22,7 @@ function Login() {
           console.log(res);
           localStorage.setItem('userID', res.data.userID);
           localStorage.setItem('userType', 'it');
-          window.location.href = './ITHome';
+          window.location.href = './Course';
         } else {
           setError(res.data.message);
         }
