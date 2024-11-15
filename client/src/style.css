@@ -7,6 +7,17 @@
   text-align: center;
 }
 
+.courses {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+}
+
+.course {
+  border: 1px solid black;
+  flex: 1;
+}
+
 .delete {
   padding: 3px 6px;
   background-color: whitesmoke;

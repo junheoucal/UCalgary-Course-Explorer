@@ -28,7 +28,7 @@ const Course = () => {
   return (
     <div>
       <h1>Courses</h1>
-      <div className="course">
+      <div className="courses">
         {courses.map((course) => (
           <div className="course" key={course.CourseID}>
             <h2>{course.Course_Name}</h2>
@@ -38,7 +38,9 @@ const Course = () => {
             <p>{course.Department_Name}</p>
             <p>{course.Concentration_Name}</p>
             <button className="update">
-              <Link to={`/itpages/UpdateCourse/${course.CourseID}`}>Update</Link>
+              <Link to={`/itpages/UpdateCourse/${course.CourseID}`}>
+                Update
+              </Link>
             </button>
             <button
               className="delete"
