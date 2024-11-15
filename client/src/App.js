@@ -11,6 +11,9 @@ import MyCourses from "./studentpages/MyCourses";
 import CourseSearch from "./studentpages/CourseSearch";
 import MyDegree from "./studentpages/MyDegree";
 import CoursePage from "./studentpages/CoursePage";
+import Current from "./studentpages/CurrentCourses";
+import Past from "./studentpages/PastCourses";
+import AddCurrent from "./studentpages/AddCurrent";
 import "./style.css";
 
 function App() {
@@ -29,6 +32,9 @@ function App() {
           <Route path="/studentpages/CourseSearch" element={<CourseSearch />} />
           <Route path="/studentpages/MyDegree" element={<MyDegree />} />
           <Route path="/studentpages/:CourseID" element={<CoursePage />} />
+          <Route path="/studentpages/CurrentCourses" element={<Current />} />
+          <Route path="/studentpages/PastCourses" element={<Past />} />
+          <Route path="/studentpages/AddCurrent" element={<AddCurrent />} />
         </Routes>
       </BrowserRouter>
     </div>
