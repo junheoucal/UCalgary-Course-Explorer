@@ -46,6 +46,7 @@ const Course = () => {
             >
               Delete
             </button>
+            <button className="lecture"><Link to={`/itpages/lecture/${course.CourseID}`}>Lecture</Link></button>
           </div>
         ))}
       </div>

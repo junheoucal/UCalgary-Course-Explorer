@@ -11,7 +11,7 @@ CREATE TABLE Course (
 );
 
 CREATE TABLE Lecture (
-	LectureID char(8) NOT NULL PRIMARY KEY,
+	LectureID INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	CourseID char(7) NOT NULL,
 	Enrollment_Limit INT(255),
 	Enrollment_Current_Number INT(255),

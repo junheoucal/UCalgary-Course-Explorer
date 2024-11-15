@@ -103,6 +103,78 @@ app.post("/studentlogin", (req, res) => {
     });
 });
 
+// --------- Lecture Routes ---------
+
+// Get all lectures for a specific course
+app.get("/lecture/:CourseID", (req, res) => {
+  const { CourseID } = req.params;
+  const q = "SELECT * FROM lecture WHERE CourseID = ?";
+  db.query(q, [CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
+// Add a new lecture
+// Add a new lecture for a specific course (CourseID passed in URL)
+app.post("/lecture/:CourseID", (req, res) => {
+  const { LectureID, Enrollment_Limit, Enrollment_Current_Number, Building_Name, Room_Location, Semester_Name, Days, Start_time, End_time } = req.body;
+  const { CourseID } = req.params; // Get the CourseID from the URL
+
+  console.log("Received data for new lecture:", {
+      LectureID, Enrollment_Limit, Enrollment_Current_Number, Building_Name,
+      Room_Location, Semester_Name, Days, Start_time, End_time, CourseID
+  });
+
+  const q = `
+    INSERT INTO lecture 
+    (LectureID, CourseID, Enrollment_Limit, Enrollment_Current_Number, Building_Name, Room_Location, Semester_Name, Days, Start_time, End_time)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  db.query(q, [
+    LectureID, CourseID, Enrollment_Limit, Enrollment_Current_Number, Building_Name, 
+    Room_Location, Semester_Name, Days, Start_time, End_time
+  ], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(201).json("Lecture has been created for CourseID " + CourseID);
+  });
+});
+
+
+// Update an existing lecture
+app.put("/lecture/:CourseID", (req, res) => {
+  const { LectureID, CourseID, Enrollment_Limit, Enrollment_Current_Number, Building_Name, Room_Location, Semester_Name, Days, Start_time, End_time } = req.body;
+  // const { CourseID } = req.params; 
+
+  console.log("Received data to update lecture:", req.body);
+  console.log("CourseID:", CourseID, "LectureID:", LectureID);
+
+  const q = `
+    UPDATE lecture 
+    SET Enrollment_Limit = ?, Enrollment_Current_Number = ?, Building_Name = ?, Room_Location = ?, 
+        Semester_Name = ?, Days = ?, Start_time = ?, End_time = ? 
+    WHERE CourseID = ? AND LectureID = ?`;
+
+  db.query(q, [
+      Enrollment_Limit, Enrollment_Current_Number, Building_Name, 
+      Room_Location, Semester_Name, Days, Start_time, End_time, CourseID, LectureID
+  ], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.json("Lecture has been updated");
+  });
+});
+
+// Delete a lecture
+app.delete("/lecture/:lectureId", (req, res) => {
+  const { lectureId } = req.params;
+
+  const q = "DELETE FROM lecture WHERE LectureID = ?";
+  db.query(q, [lectureId], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Lecture has been deleted");
+  });
+});
+
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to the course API" });
 });

@@ -7,6 +7,9 @@ import StudentHome from './studentpages/StudentHome';
 import Course from './itpages/Course';
 import AddCourse from './itpages/AddCourse';
 import UpdateCourse from './itpages/UpdateCourse';
+import Lecture from './itpages/Lecture';
+import AddLecture from './itpages/AddLecture';
+import UpdateLecture from './itpages/UpdateLecture';
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
         <Route path="/itpages/Course" element={<Course />} />
         <Route path="/itpages/AddCourse" element={<AddCourse />} />
         <Route path="/itpages/UpdateCourse/:id" element={<UpdateCourse />} />
+        <Route path="/itpages/lecture/:CourseID" element={<Lecture />} /> 
+        <Route path="/itpages/AddLecture/:CourseID" element={<AddLecture />} />
+        <Route path="/itpages/UpdateLecture/:CourseID" element={<UpdateLecture />} />
       </Routes>
     </BrowserRouter>
   );
