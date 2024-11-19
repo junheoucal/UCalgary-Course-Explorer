@@ -31,7 +31,8 @@ const Course = () => {
       <div className="course">
         {courses.map((course) => (
           <div className="course" key={course.CourseID}>
-            <h2>{course.Course_Name}</h2>
+            <h2>{course.CourseID}</h2>
+            <h3>{course.Course_Name}</h3>
             <p>{course.Level}</p>
             <p>{course.Course_Description}</p>
             <p>{course.Credits}</p>

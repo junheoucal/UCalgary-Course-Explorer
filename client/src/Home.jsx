@@ -9,6 +9,7 @@ function Home() {
         <div className="login-buttons">
             <button><Link to="/studentpages/Login">Login as Student</Link></button>
             <button><Link to="/itpages/Login">Login as IT</Link></button>
+            <button><Link to="/itpages/Register">Register as IT</Link></button>
         </div>
     </div>
   )

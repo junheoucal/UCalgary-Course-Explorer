@@ -10,7 +10,7 @@ import UpdateCourse from './itpages/UpdateCourse';
 import Lecture from './itpages/Lecture';
 import AddLecture from './itpages/AddLecture';
 import UpdateLecture from './itpages/UpdateLecture';
-
+import Register from './itpages/Register';
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +25,7 @@ function App() {
         <Route path="/itpages/lecture/:CourseID" element={<Lecture />} /> 
         <Route path="/itpages/AddLecture/:CourseID" element={<AddLecture />} />
         <Route path="/itpages/UpdateLecture/:CourseID" element={<UpdateLecture />} />
+        <Route path="/itpages/Register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
