@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';  // Import useState
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import Navigation from '../components/Navigation';
 const Lecture = () => {
     const { CourseID } = useParams(); // Get courseId from the URL
     // console.log("Course ID:", CourseID);

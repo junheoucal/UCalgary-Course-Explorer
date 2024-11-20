@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import axios from 'axios';
+import AuthContext from '../context/AuthProvider';
 
+const LOGIN_URL = '/itlogin';
 function Login() {
+  const {setAuth} = useContext(AuthContext);
   const [UCID, setUCID] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,7 +13,6 @@ function Login() {
     e.preventDefault();
     setError('');
     
-    // Check if fields are not empty
     if (!UCID || !password) {
       setError('Please fill in all fields');
       return;
@@ -19,17 +21,16 @@ function Login() {
     axios.post("http://localhost:8800/itlogin", {UCID, password})
       .then((res) => {
         if (res.data.success) {
-          console.log(res);
           localStorage.setItem('userID', res.data.userID);
           localStorage.setItem('userType', 'it');
-          window.location.href = './Course';
+          window.location.href = './course';
         } else {
           setError(res.data.message);
         }
       })
       .catch((err) => {
+        console.error('Login error:', err);
         setError('An error occurred during login');
-        console.log(err);
       });
   }
 

@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import axios from 'axios';
+import AuthContext from '../context/AuthProvider';
 
+const LOGIN_URL = '/studentlogin';
 function Login() {
+  const {setAuth} = useContext(AuthContext);
   const [UCID, setUCID] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
