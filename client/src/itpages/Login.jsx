@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react'
 import axios from 'axios';
-import AuthContext from '../context/AuthProvider';
+import { useAuth } from '../context/AuthContext';
 
 const LOGIN_URL = '/itlogin';
 function Login() {
-  const {setAuth} = useContext(AuthContext);
+  const { login } = useAuth();
   const [UCID, setUCID] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,8 +21,7 @@ function Login() {
     axios.post("http://localhost:8800/itlogin", {UCID, password})
       .then((res) => {
         if (res.data.success) {
-          localStorage.setItem('userID', res.data.userID);
-          localStorage.setItem('userType', 'it');
+          login(res.data.userID, 'it');
           window.location.href = './course';
         } else {
           setError(res.data.message);
