@@ -4,7 +4,7 @@ import AuthContext from '../context/AuthProvider';
 
 const LOGIN_URL = '/studentlogin';
 function Login() {
-  const {setAuth} = useContext(AuthContext);
+  const { setAuth } = useContext(AuthContext);
   const [UCID, setUCID] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,7 +13,6 @@ function Login() {
     e.preventDefault();
     setError('');
     
-    // Check if fields are not empty
     if (!UCID || !password) {
       setError('Please fill in all fields');
       return;
@@ -22,9 +21,16 @@ function Login() {
     axios.post("http://localhost:8800/studentlogin", {UCID, password})
       .then((res) => {
         if (res.data.success) {
+          setAuth({ 
+            userID: res.data.userID, 
+            userType: 'student',
+            isAuthenticated: true 
+          });
+          
           localStorage.setItem('userID', res.data.userID);
           localStorage.setItem('userType', 'student');
-          window.location.href = './StudentHome';
+          
+          window.location.href = '/studentpages/home';
         } else {
           setError(res.data.message);
         }

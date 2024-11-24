@@ -1,6 +1,6 @@
 import { AuthProvider } from './context/AuthContext';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './itpages/Login';
+import ITLogin from './itpages/Login';
 import StudentLogin from './studentpages/Login';
 import StudentRegister from './studentpages/Register';
 import Register from './itpages/Register';
@@ -18,6 +18,7 @@ import PastCourses from './studentpages/PastCourses';
 import MyDegree from './studentpages/MyDegree';
 import CourseSearch from './studentpages/CourseSearch';
 import MyCourses from './studentpages/MyCourses';
+import CoursePage from './studentpages/CoursePage';
 import Home from './Home';
 
 function App() {
@@ -26,25 +27,40 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/itpages/login" element={<Login />} />
-            <Route path="/studentpages/login" element={<StudentLogin />} />
+            <Route path="/Home" element={<Home />} />
+            <Route path="/itpages/login" element={<ITLogin />} />
             <Route path="/itpages/register" element={<Register />} />
-            <Route path="/studentpages/register" element={<StudentRegister />} />
-            <Route path="/studentpages/mycourses" element={<MyCourses />} />
-            <Route path="/studentpages/studenthome" element={<StudentHome />} />
-            <Route path="/studentpages/currentenrollment" element={<CurrentEnrollment />} />
-            <Route path="/studentpages/addenrollment" element={<AddEnrollment />} />
-            <Route path="/studentpages/pastcourses" element={<PastCourses />} />
-            <Route path="/studentpages/mydegree" element={<MyDegree />} />
-            <Route path="/studentpages/courseseach" element={<CourseSearch />} />
-            <Route path="/itpages/course" element={
-              <AuthGuard>
-                <Course />
+            <Route path="/itpages/*" element={
+              <AuthGuard userType="it">
+                <Routes>
+                  <Route path="home" element={<Home />} />
+                  <Route path="course" element={<Course />} />
+                  <Route path="lecture" element={<Lecture />} />
+                  <Route path="addcourse" element={<AddCourse />} />
+                  <Route path="updatecourse" element={<UpdateCourse />} />
+                  <Route path="addlecture" element={<AddLecture />} />
+                  <Route path="updatelcture" element={<UpdateLecture />} />
+                </Routes>
               </AuthGuard>
             } />
-            <Route path="/" element={<Navigate to="/" replace />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/studentpages/login" element={<StudentLogin />} />
+            <Route path="/studentpages/register" element={<Register />} />
+            <Route path="/studentpages/*" element={
+              <AuthGuard userType="student">
+                <Routes>
+                  <Route path="home" element={<StudentHome />} />
+                  <Route path="courses" element={<CoursePage />} />
+                  <Route path="mycourses" element={<MyCourses />} />
+                  <Route path="currentenrollment" element={<CurrentEnrollment />} />
+                  <Route path="addenrollment" element={<AddEnrollment />} />
+                  <Route path="pastcourses" element={<PastCourses />} />
+                  <Route path="mydegree" element={<MyDegree />} />
+                  <Route path="coursesearch" element={<CourseSearch />} />
+                </Routes>
+              </AuthGuard>
+            } />
+            <Route path="/" element={<Navigate to="/Home" replace />} />
+            <Route path="*" element={<Navigate to="/Home" replace />} />
           </Routes>
         </BrowserRouter>
       </div>
