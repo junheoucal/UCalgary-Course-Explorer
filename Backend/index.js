@@ -96,19 +96,27 @@ app.post("/itlogin", async (req, res) => {
     });
 });
 
-app.post("/studentlogin", (req, res) => {
-    const sql = "SELECT * FROM studentlogin WHERE userID = ? AND password = ?";
-    const values = [req.body.UCID, req.body.password];
+app.post("/studentlogin", async (req, res) => {
+    const sql = "SELECT * FROM studentlogin WHERE userID = ?";
+    const values = [req.body.UCID];
+    
     db.query(sql, values, (err, data) => {
         if (err) return res.json({ success: false, message: "Login Failed" });
-        if (data.length > 0) {
+        if (data.length === 0) {
+            return res.json({ success: false, message: "No Record" });
+        }
+
+        // Compare the provided password with the stored hash
+        const isValidPassword = bcrypt.compareSync(req.body.password, data[0].password);
+        
+        if (isValidPassword) {
             return res.json({ 
                 success: true, 
                 message: "Login Successful",
                 userID: data[0].userID 
             });
         }
-        return res.json({ success: false, message: "No Record" });
+        return res.json({ success: false, message: "Invalid Password" });
     });
 });
 
@@ -198,6 +206,19 @@ db.connect((err) => {
 
 app.listen(8800, () => {
     console.log("Connected to backend");
+});
+
+app.post("/studentregister", (req, res) => {
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+
+    const sql = "INSERT INTO studentlogin (userID, password) VALUES (?, ?)";
+    const values = [req.body.UCID, hashedPassword];
+    
+    db.query(sql, values, (err, data) => {
+        if (err) return res.json({ success: false, message: "Registration Failed" });
+        return res.json({ success: true, message: "Registration Successful" });
+    });
 });
 
 app.post("/itregister", (req, res) => {
