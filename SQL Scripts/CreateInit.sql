@@ -11,7 +11,7 @@ CREATE TABLE Course (
 );
 
 CREATE TABLE Lecture (
-	LectureID char(8) NOT NULL PRIMARY KEY,
+	LectureID INT(8) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	CourseID char(7) NOT NULL,
 	Enrollment_Limit INT(255),
 	Enrollment_Current_Number INT(255),
@@ -26,7 +26,7 @@ CREATE TABLE Lecture (
 );
 
 CREATE TABLE IT (
-	ITID varchar(255) NOT NULL PRIMARY KEY,
+	ITID char(8) NOT NULL PRIMARY KEY,
 	Email varchar(255) NOT NULL
 );
 
@@ -104,6 +104,20 @@ CREATE TABLE Student (
 	Department_Name varchar(255) NOT NULL,
     FOREIGN KEY(Department_Name) REFERENCES Department(Department_Name) 
 		 ON DELETE CASCADE	ON UPDATE CASCADE
+);
+
+CREATE TABLE StudentLogin (
+	StudentID char(8) NOT NULL PRIMARY KEY,
+	Password varchar(255) NOT NULL,
+    FOREIGN KEY(StudentID) REFERENCES Student(StudentID)
+		ON DELETE CASCADE	ON UPDATE CASCADE
+);
+
+CREATE TABLE ITLogin (
+	ITID char(8) NOT NULL PRIMARY KEY,
+	Password varchar(255) NOT NULL,
+    FOREIGN KEY(ITID) REFERENCES IT(ITID)
+		ON DELETE CASCADE	ON UPDATE CASCADE
 );
 
 CREATE TABLE Semester (

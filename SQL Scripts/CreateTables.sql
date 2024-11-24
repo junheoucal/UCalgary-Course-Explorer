@@ -14,7 +14,6 @@ CREATE TABLE Course (
 
 CREATE TABLE Lecture (
 	CourseID char(7) NOT NULL,
-	ProfessorID char(8) NOT NULL,
 	Enrollment_Limit INT(255),
 	Enrollment_Current_Number INT(255),
 	Building_Name varchar(255),
@@ -24,8 +23,6 @@ CREATE TABLE Lecture (
 	Start_time TIME,
 	End_time TIME,
     FOREIGN KEY(CourseID) REFERENCES Course(CourseID)
-		ON DELETE CASCADE	ON UPDATE CASCADE,
-	FOREIGN KEY(ProfessorID) REFERENCES Professor(ProfessorID)
 		ON DELETE CASCADE	ON UPDATE CASCADE,
 	FOREIGN KEY(Semester_Name) REFERENCES Semester(Semester_Name) 
 		ON DELETE CASCADE	ON UPDATE CASCADE
