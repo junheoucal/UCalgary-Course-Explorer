@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const StudentHome = () => {
+  const { auth } = useAuth();
   return (
+    console.log(auth.UCID),
     <div className="student-home">
       <h1>Student Home Page</h1>
       <button>
