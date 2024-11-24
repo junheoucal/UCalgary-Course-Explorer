@@ -1,15 +1,16 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
-const LOGIN_URL = '/itlogin';
 function Login() {
-  const { login } = useAuth();
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
   const [UCID, setUCID] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
@@ -18,20 +19,30 @@ function Login() {
       return;
     }
 
-    axios.post("http://localhost:8800/itlogin", {UCID, password})
-      .then((res) => {
-        if (res.data.success) {
-          login(res.data.userID, 'it');
-          window.location.href = './course';
-        } else {
-          setError(res.data.message);
-        }
-      })
-      .catch((err) => {
-        console.error('Login error:', err);
-        setError('An error occurred during login');
+    try {
+      const response = await axios.post("http://localhost:8800/itlogin", {
+        UCID, 
+        password
       });
-  }
+
+      if (response.data.success) {
+        // Update auth context with new data
+        setAuth({
+          UCID: response.data.userID,
+          userType: 'it',
+          isAuthenticated: true
+        });
+        
+        // Use navigate instead of window.location
+        navigate('/itpages/course');
+      } else {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred during login');
+    }
+  };
 
   return (
     <div>
@@ -60,7 +71,7 @@ function Login() {
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

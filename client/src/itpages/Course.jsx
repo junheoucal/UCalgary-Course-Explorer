@@ -5,70 +5,55 @@ import Navigation from '../components/Navigation';
 import { useAuth } from '../context/AuthContext';
 
 const Course = () => {
-  const { user } = useAuth();
-  const [courses, setCourse] = useState([]);
+  const [courses, setCourses] = useState([]); 
 
   useEffect(() => {
-    const fetchAllCourses = async () => {
-      try {
-        const res = await axios.get("http://localhost:8800/course");
-        setCourse(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchAllCourses();
-  }, []);
+      const fetchAllCourse = async () => {
+          try { 
+              const res = await axios.get("http://localhost:8800/course");
+              setCourses(res.data);  
+          } catch (err) {
+              console.log(err);
+          }
+      };
+      fetchAllCourse();
+  }, []); 
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete("http://localhost:8800/course/" + id);
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
+  const handleDelete = async (CourseID) =>{
+      try{
+          await axios.delete("http://localhost:8800/course/" + CourseID)
+          window.location.reload()
+      } catch (err) {
+          console.log(err)
+      }
+  }
+
   return (
-    <div>
-      <Navigation />
-      <div className="course-content">
-        <h2>Welcome, {user.userID}</h2>
-        {user.isAuthenticated ? (
-          <div>
-            <h1>Courses</h1>
-            <div className="course">
+      <div> 
+          <h1> Course List </h1>
+          <div className="course">
               {courses.map((course) => (
-                <div className="course" key={course.CourseID}>
-                  <h2>{course.CourseID}</h2>
-                  <h3>{course.Course_Name}</h3>
-                  <p>{course.Level}</p>
-                  <p>{course.Course_Description}</p>
-                  <p>{course.Credits}</p>
-                  <p>{course.Department_Name}</p>
-                  <p>{course.Concentration_Name}</p>
-                  <button className="update">
-                    <Link to={`/itpages/UpdateCourse/${course.CourseID}`}>Update</Link>
-                  </button>
-                  <button
-                    className="delete"
-                    onClick={() => handleDelete(course.CourseID)}
-                  >
-                    Delete
-                  </button>
-                  <button className="lecture"><Link to={`/itpages/lecture/${course.CourseID}`}>Lecture</Link></button>
-                </div>
+                  <div className="course" key={course.CourseID}> 
+                      <h2>{course.CourseID}</h2>
+                      <h3>{course.Course_Name}</h3>
+                      <p>{course.Level}</p>
+                      <p>{course.Course_Description}</p>
+                      <p>{course.Credits}</p>
+                      <p>{course.Department_Name}</p>
+                      <p>{course.Concentration_Name}</p>
+                      <button className ="delete" onClick={()=>handleDelete(course.CourseID)}>Delete</button>
+                      <button className="update"><Link to={`/itpages/updatecourse/${course.CourseID}`}>Update</Link></button>
+                      <button className="lecture"><Link to={`/itpages/lecture/${course.CourseID}`}>Lecture</Link></button>
+                      <button className="tutorial"><Link to={`/itpages/Tutorial/${course.CourseID}`}>Tutorial</Link></button>
+                  </div>
               ))}
-            </div>
-            <button>
-              <Link to="/itpages/AddCourse">Add New Course</Link>
-            </button>
           </div>
-        ) : (
-          <p>Please log in to view this content</p>
-        )}
+          <button>
+              <Link to="/itpages/add">Add new Course</Link>
+          </button>
       </div>
-    </div>
-  );
-};
+  );    
+}
 
 export default Course;

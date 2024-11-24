@@ -72,6 +72,79 @@ app.post("/course", (req, res) => {
     });
   });
 
+// --------- Tutorial Routes ---------
+
+app.get("/tutorial/:CourseID", (req, res) => {
+  const { CourseID } = req.params;
+  const q = "SELECT * FROM tutorial WHERE CourseID = ?";
+  db.query(q, [CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
+app.get("/tutorial/:CourseID/:TutorialNo/:semester_name", (req, res) => {
+  const { CourseID, TutorialNo, semester_name } = req.params;
+  const q = "SELECT * FROM tutorial WHERE CourseID = ? AND TutorialNo = ? AND semester_name = ?";
+  db.query(q, [CourseID, TutorialNo, semester_name], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
+app.post("/tutorial/:CourseID", (req, res) => {
+  const { TutorialNo, semester_name, TA_name, Enrollment_Limit, Enrollment_Current_Number, Building_Name, Room_Location, Days, Start_time, End_time } = req.body;
+  const { CourseID } = req.params;
+  
+  const q = `
+      INSERT INTO tutorial 
+      (TutorialNo, CourseID, semester_name, TA_name, Enrollment_Limit, Enrollment_Current_Number, Building_Name, Room_Location, Days, Start_time, End_time)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(q, [
+      TutorialNo, CourseID, semester_name, TA_name, Enrollment_Limit, Enrollment_Current_Number, Building_Name, 
+      Room_Location, Days, Start_time, End_time
+  ], (err, data) => {
+      if (err) {
+          console.error("Error inserting tutorial:", err);
+          return res.status(500).json({ message: 'Failed to create tutorial', error: err.message });
+      }
+      console.log("Tutorial successfully created:", data);
+      return res.status(201).json("Tutorial has been created for CourseID " + CourseID);
+  });
+});
+
+app.put("/tutorial/:CourseID/:TutorialNo/:semester_name", (req, res) => {
+  const { CourseID, TutorialNo, semester_name } = req.params;
+  const { Enrollment_Limit, Enrollment_Current_Number, Building_Name, Room_Location, Days, Start_time, End_time } = req.body; 
+
+  const q = `
+    UPDATE tutorial
+    SET Enrollment_Limit = ?, Enrollment_Current_Number = ?, Building_Name = ?, Room_Location = ?, 
+        Days = ?, Start_time = ?, End_time = ? 
+    WHERE CourseID = ? AND TutorialNo = ? AND semester_name = ?`;
+
+  db.query(q, [
+      Enrollment_Limit, Enrollment_Current_Number, Building_Name, 
+      Room_Location, Days, Start_time, End_time, CourseID, TutorialNo, semester_name
+  ], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.json("Tutorial has been updated");
+  });
+});
+
+app.delete("/tutorial/:CourseID/:TutorialNo/:semester_name", (req, res) => {
+  const { CourseID, TutorialNo, semester_name } = req.params;
+
+  const q = "DELETE FROM tutorial WHERE CourseID = ? AND TutorialNo = ? AND semester_name = ?";
+  db.query(q, [CourseID, TutorialNo, semester_name], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Tutorial has been deleted");
+  });
+});
+
+
 app.post("/itlogin", async (req, res) => {
     const sql = "SELECT * FROM itlogin WHERE userID = ?";
     const values = [req.body.UCID];

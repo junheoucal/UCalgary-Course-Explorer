@@ -19,6 +19,9 @@ import MyDegree from './studentpages/MyDegree';
 import CourseSearch from './studentpages/CourseSearch';
 import MyCourses from './studentpages/MyCourses';
 import CoursePage from './studentpages/CoursePage';
+import Tutorial from './itpages/Tutorial';
+import UpdateTutorial from './itpages/UpdateTutorial';
+import AddTutorial from './itpages/AddTutorial';
 import Home from './Home';
 
 function App() {
@@ -35,11 +38,14 @@ function App() {
                 <Routes>
                   <Route path="home" element={<Home />} />
                   <Route path="course" element={<Course />} />
-                  <Route path="lecture" element={<Lecture />} />
+                  <Route path="lecture/*" element={<Lecture />} />
                   <Route path="addcourse" element={<AddCourse />} />
-                  <Route path="updatecourse" element={<UpdateCourse />} />
+                  <Route path="updatecourse/*" element={<UpdateCourse />} />
                   <Route path="addlecture" element={<AddLecture />} />
-                  <Route path="updatelcture" element={<UpdateLecture />} />
+                  <Route path="updatelcture/*" element={<UpdateLecture />} />
+                  <Route path="addtutorial/*" element={<AddTutorial />} />
+                  <Route path="tutorial/:CourseID" element={<Tutorial />} />
+                  <Route path="updatetutorial/*" element={<UpdateTutorial />} />
                 </Routes>
               </AuthGuard>
             } />
