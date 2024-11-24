@@ -24,7 +24,7 @@ const CourseSearch = () => {
       {courses.map((course) => (
         <div className="course" key={course.CourseID}>
           <h3>
-            <Link to={`/studentpages/${course.CourseID}`}>
+            <Link to={`/studentpages/CoursePage/${course.CourseID}`}>
               {course.CourseID}
             </Link>
           </h3>

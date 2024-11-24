@@ -62,6 +62,7 @@ function App() {
                   <Route path="pastcourses" element={<PastCourses />} />
                   <Route path="mydegree" element={<MyDegree />} />
                   <Route path="coursesearch" element={<CourseSearch />} />
+                  <Route path="CoursePage/:CourseID" element={<CoursePage />} />
                 </Routes>
               </AuthGuard>
             } />

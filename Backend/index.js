@@ -23,6 +23,15 @@ app.get("/course", (req, res) => {
   });
 });
 
+app.get("/course/:CourseID", (req, res) => {
+  const { CourseID } = req.params;
+  const q = "SELECT * FROM course WHERE CourseID = ?";
+  db.query(q, [CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
 app.post("/course", (req, res) => {
     const q =
       "INSERT INTO course (`CourseID`, `Course_Name`, `Level`, `Course_Description`, `Credits`, `Department_Name`, `Concentration_Name`) VALUES (?)";
@@ -71,6 +80,31 @@ app.post("/course", (req, res) => {
       return res.json("Course has been deleted successfully");
     });
   });
+
+// --------- Student Routes ---------
+
+app.post("/take_course/:CourseID", (req, res) => {
+  const { CourseID } = req.params;
+  const { UCID } = req.body;
+  
+  console.log("Received request to add course:", { CourseID, UCID }); // Debug log
+
+  if (!UCID) {
+    console.log("No UCID provided");
+    return res.status(400).json({ error: "UCID is required" });
+  }
+
+  const q = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
+  
+  db.query(q, [CourseID, UCID], (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    console.log("Successfully added course to taken_by table");
+    return res.json({ success: true, message: "Course has been added to My Courses" });
+  });
+});
 
 // --------- Tutorial Routes ---------
 
