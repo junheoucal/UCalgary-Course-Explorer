@@ -234,6 +234,88 @@ app.post("/itregister", (req, res) => {
     });
 });
 
+// Get Student's past courses
+// app.get("/studentpages/PastCourses", (req, res) => {
+//   const { StudentID } = req.query;
+
+//   const q = `SELECT CourseID, StudentID FROM taken_by WHERE StudentID = ?`;
+
+//   db.query(q, [StudentID], (err, data) => {
+//     if (err) {
+//         return res.status(500).json({ message: "Error fetching past courses", error: err });
+//     }
+//     res.status(200).json(data);
+//   });
+// });
+
+app.get("/studentpages/PastCourses", (req, res) => {
+  const { StudentID } = req.query;
+
+  const q = `
+    SELECT 
+      c.CourseID, 
+      c.Course_Name, 
+      c.Level, 
+      c.Course_Description, 
+      c.Credits, 
+      c.Department_Name, 
+      c.Concentration_Name, 
+      p.CourseID AS Prerequisite, 
+      a.CourseID AS Antirequisite,
+      ma.Major,
+      mi.Minor
+    FROM 
+      taken_by t
+    LEFT JOIN 
+      course c ON t.CourseID = c.CourseID
+    LEFT JOIN 
+      prerequisite p ON c.CourseID = p.Required_CourseID
+    LEFT JOIN 
+      antirequisite a ON c.CourseID = a.Conflicting_CourseID
+    LEFT JOIN
+      major_requirement ma ON c.CourseID = ma.CourseID
+    LEFT JOIN
+      minor_requirement mi ON c.CourseID = mi.CourseID
+    WHERE 
+      t.StudentID = ?
+  `;
+
+  db.query(q, [StudentID], (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error fetching past courses", error: err });
+    }
+    res.status(200).json(data);
+  });
+});
+
+// Get Student's Major and Minor
+app.get("/studentpages/MyDegree", (req, res) => {
+  const { StudentID } = req.query;
+
+  const q = `
+    SELECT 
+      tm.StudentID, 
+      tm.Major, 
+      tn.Minor 
+    FROM 
+      take_major tm
+    LEFT JOIN 
+      take_minor tn 
+    ON 
+      tm.StudentID = tn.StudentID
+    WHERE 
+      tm.StudentID = ?
+  `;
+
+  db.query(q, [StudentID], (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error fetching major and minor", error: err });
+    }
+    res.status(200).json(data);
+  });
+});
+
+
 app.use((req, res) => {
     res.status(404).json({ message: `Route ${req.url} not found` });
-});
+});  
