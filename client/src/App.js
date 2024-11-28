@@ -23,6 +23,7 @@ import Tutorial from "./itpages/Tutorial";
 import UpdateTutorial from "./itpages/UpdateTutorial";
 import AddTutorial from "./itpages/AddTutorial";
 import Home from "./Home";
+import "./style.css";
 
 function App() {
   return (
