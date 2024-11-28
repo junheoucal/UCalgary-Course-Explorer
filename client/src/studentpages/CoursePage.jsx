@@ -24,17 +24,20 @@ const CoursePage = () => {
   const handleClick = async () => {
     try {
       console.log("Attempting to add course with UCID:", auth.UCID);
-      const response = await axios.post(`http://localhost:8800/take_course/${CourseID}`, {
-        UCID: auth.UCID
-      });
+      const response = await axios.post(
+        `http://localhost:8800/take_course/${CourseID}`,
+        {
+          UCID: auth.UCID,
+        }
+      );
       console.log("Server response:", response.data);
-      
+
       if (response.data.error) {
         console.error("Error adding course:", response.data.error);
         return;
       }
-      
-      navigate('/studentpages/home');
+
+      navigate("/studentpages/home");
     } catch (err) {
       console.error("Error adding course:", err.response?.data || err.message);
     }

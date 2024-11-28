@@ -18,9 +18,10 @@ const CourseSearch = () => {
     fetchAllCourses();
   }, []);
 
-  const filteredCourses = courses.filter((course) =>
-    course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
