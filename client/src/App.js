@@ -12,14 +12,16 @@ import Lecture from './itpages/Lecture';
 import AddLecture from './itpages/AddLecture';
 import UpdateLecture from './itpages/UpdateLecture';
 import StudentHome from './studentpages/StudentHome';
-import CurrentEnrollment from './studentpages/CurrentEnrollment';
-import AddEnrollment from './studentpages/AddEnrollment';
+import Minor from './studentpages/Minor';
+import Major from './studentpages/Major';
 import PastCourses from './studentpages/PastCourses';
 import MyDegree from './studentpages/MyDegree';
 import CourseSearch from './studentpages/CourseSearch';
 import MyCourses from './studentpages/MyCourses';
 import CoursePage from './studentpages/CoursePage';
 import Home from './Home';
+import AddMajor from './studentpages/AddMajor';
+import AddMinor from './studentpages/AddMinor';
 
 function App() {
   return (
@@ -51,10 +53,12 @@ function App() {
                   <Route path="home" element={<StudentHome />} />
                   <Route path="courses" element={<CoursePage />} />
                   <Route path="mycourses" element={<MyCourses />} />
-                  <Route path="currentenrollment" element={<CurrentEnrollment />} />
-                  <Route path="addenrollment" element={<AddEnrollment />} />
+                  <Route path="minor" element={<Minor />} />
+                  <Route path="major" element={<Major />} />
                   <Route path="pastcourses" element={<PastCourses />} />
                   <Route path="mydegree" element={<MyDegree />} />
+                  <Route path="addmajor" element={<AddMajor />} />
+                  <Route path="addminor" element={<AddMinor />} />
                   <Route path="coursesearch" element={<CourseSearch />} />
                 </Routes>
               </AuthGuard>
