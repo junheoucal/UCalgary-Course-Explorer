@@ -5,6 +5,11 @@ import { Link } from "react-router-dom";
 const CourseSearch = () => {
   const [courses, setCourse] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    showtaken: true,
+    showantirequisites: true,
+    showtakable: false,
+  });
 
   useEffect(() => {
     const fetchAllCourses = async () => {
@@ -35,6 +40,10 @@ const CourseSearch = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ padding: "8px", margin: "10px 0", width: "200px" }}
         />
+        <input type="checkbox" checked = {filters.showtaken}
+          onChange={(e) => setFilters({...filters, showtaken: e.target.checked})}
+        />
+        Show Taken Courses
       </div>
       {filteredCourses.map((course) => (
         <div className="course" key={course.CourseID}>
