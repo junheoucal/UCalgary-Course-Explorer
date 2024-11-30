@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';  // Import useState
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from '../components/Navigation';
 const Lecture = () => {
-    const { CourseID } = useParams(); // Get courseId from the URL
-    // console.log("Course ID:", CourseID);
+    const location = useLocation()
+    const CourseID = location.pathname.split("/")[3]
     const [lectures, setLectures] = useState([]);
 
     useEffect(() => {
@@ -20,20 +20,21 @@ const Lecture = () => {
     }, []);
 
 
-    const handleDeleteLecture = async (LectureID) =>{
-        try{
-            await axios.delete("http://localhost:8800/lecture/" + LectureID)
-            window.location.reload()
+    const handleDeleteLecture = async (LectureID) => {
+        try {
+            console.log("Deleting lecture with ID:", LectureID);
+            await axios.delete(`http://localhost:8800/lecture/${CourseID}/${LectureID}`);
+            window.location.reload(); 
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
-    }
+    }    
 
     return (
         <div> 
             <h1> Lecture List </h1>
             <div className="lecture">
-                {lectures.map((lecture) => (  // Changed course to courses
+                {lectures.map((lecture) => ( 
                     <div className="lecture" key={lecture.LectureID}> 
                         <h2>{lecture.LectureID}</h2>
                         <p>{lecture.Enrollment_Limit}</p>
@@ -45,7 +46,7 @@ const Lecture = () => {
                         <p>{lecture.Start_time}</p>
                         <p>{lecture.End_time}</p>
                         <button className ="delete" onClick={()=>handleDeleteLecture(lecture.LectureID)}>Delete</button>
-                        <button className="update"><Link to={`/itpages/UpdateLecture/${CourseID}`}>Update</Link></button>
+                        <button className="update"><Link to={`/itpages/UpdateLecture/${CourseID}/${lecture.LectureID}`}>Update</Link></button>
                     </div>
                 ))}
             </div>
@@ -53,7 +54,7 @@ const Lecture = () => {
                 <Link to={`/itpages/AddLecture/${CourseID}`}>Add new Lecture</Link>
             </button>
             <button>
-                <Link to="/itpages/Course">Go Back To Course List</Link>
+                <Link to="/">Go Back To Course List</Link>
             </button>
         </div>
     );    

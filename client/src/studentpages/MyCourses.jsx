@@ -18,6 +18,4 @@ const MyCourses = () => {
   );
 };
 
-
-
 export default MyCourses;

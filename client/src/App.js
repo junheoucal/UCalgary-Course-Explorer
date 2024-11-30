@@ -22,6 +22,8 @@ import CoursePage from './studentpages/CoursePage';
 import Home from './Home';
 import AddMajor from './studentpages/AddMajor';
 import AddMinor from './studentpages/AddMinor';
+import "./style.css";
+
 
 function App() {
   return (
@@ -32,21 +34,30 @@ function App() {
             <Route path="/Home" element={<Home />} />
             <Route path="/itpages/login" element={<ITLogin />} />
             <Route path="/itpages/register" element={<Register />} />
-            <Route path="/itpages/*" element={
-              <AuthGuard userType="it">
-                <Routes>
-                  <Route path="home" element={<Home />} />
-                  <Route path="course" element={<Course />} />
-                  <Route path="lecture" element={<Lecture />} />
-                  <Route path="addcourse" element={<AddCourse />} />
-                  <Route path="updatecourse" element={<UpdateCourse />} />
-                  <Route path="addlecture" element={<AddLecture />} />
-                  <Route path="updatelcture" element={<UpdateLecture />} />
-                </Routes>
-              </AuthGuard>
-            } />
+            <Route
+              path="/itpages/*"
+              element={
+                <AuthGuard userType="it">
+                  <Routes>
+                    <Route path="home" element={<Home />} />
+                    <Route path="course" element={<Course />} />
+                    <Route path="lecture/*" element={<Lecture />} />
+                    <Route path="addcourse" element={<AddCourse />} />
+                    <Route path="updatecourse/*" element={<UpdateCourse />} />
+                    <Route path="addlecture" element={<AddLecture />} />
+                    <Route path="updatelcture/*" element={<UpdateLecture />} />
+                    <Route path="addtutorial/*" element={<AddTutorial />} />
+                    <Route path="tutorial/:CourseID" element={<Tutorial />} />
+                    <Route
+                      path="updatetutorial/*"
+                      element={<UpdateTutorial />}
+                    />
+                  </Routes>
+                </AuthGuard>
+              }
+            />
             <Route path="/studentpages/login" element={<StudentLogin />} />
-            <Route path="/studentpages/register" element={<Register />} />
+            <Route path="/studentpages/register" element={<StudentRegister />} />
             <Route path="/studentpages/*" element={
               <AuthGuard userType="student">
                 <Routes>
