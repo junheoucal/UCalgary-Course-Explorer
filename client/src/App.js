@@ -65,7 +65,7 @@ function App() {
               <AuthGuard userType="student">
                 <Routes>
                   <Route path="home" element={<StudentHome />} />
-                  <Route path="courses" element={<CoursePage />} />
+                  <Route path="CoursePage/:CourseID" element={<CoursePage />} />
                   <Route path="mycourses" element={<MyCourses />} />
                   <Route path="minor" element={<Minor />} />
                   <Route path="major" element={<Major />} />

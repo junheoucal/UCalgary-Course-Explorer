@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import "./CourseSearch.css";
 
 const CourseSearch = () => {
   const { auth } = useAuth();
@@ -43,63 +44,73 @@ const CourseSearch = () => {
     <div>
       <h1>Course Search</h1>
       <div className="course-search">
-        <input
-          type="text"
-          placeholder="Search courses..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: "8px", margin: "10px 0", width: "200px" }}
-        />
-        <div>
-        <input
-            type="checkbox"
-            checked={filters.showtaken}
-            onChange={(e) =>
-              setFilters({ ...filters, showtaken: e.target.checked })
-            }
-        />
-        Show Taken Courses
-        </div>
-        <div>
+        <div className="search-controls">
           <input
-            type="checkbox"
-            checked={filters.showantirequisites}
-            onChange={(e) =>
-              setFilters({ ...filters, showantirequisites: e.target.checked })
-            }
+            className="search-input"
+            type="text"
+            placeholder="Search courses..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          Show Antirequisites
         </div>
-        <div>
-          <input
-            type="checkbox"
-            checked={filters.showtakable}
-            onChange={(e) => setFilters({ ...filters, showtakable: e.target.checked })}
-          />
-          Show Takable Courses
-        </div>
-        <div>
-          <input
-            type="checkbox"
-            checked={filters.showonlyrequirements}
-            onChange={(e) => setFilters({ ...filters, showonlyrequirements: e.target.checked})}
-          />
-          Show Only Requirements
-        </div>
-        <div>
-          <select 
-            name="department" 
-            id="department"
-            value={filters.department}
-            onChange={(e) => setFilters({ ...filters, department: e.target.value })}
-          >
-            <option value="ALL">All Departments</option>
-            <option value="CPSC">CPSC</option>
-            <option value="MATH">MATH</option>
-          </select>
-          Select Department
+        
+        <div className="filters-container">
+          <div className="filter-option">
+            <input
+              type="checkbox"
+              checked={filters.showtaken}
+              onChange={(e) =>
+                setFilters({ ...filters, showtaken: e.target.checked })
+              }
+            />
+            <label>Show Taken Courses</label>
+          </div>
+
+          <div className="filter-option">
+            <input
+              type="checkbox"
+              checked={filters.showantirequisites}
+              onChange={(e) =>
+                setFilters({ ...filters, showantirequisites: e.target.checked })
+              }
+            />
+            <label>Show Antirequisites</label>
+          </div>
+
+          <div className="filter-option">
+            <input
+              type="checkbox"
+              checked={filters.showtakable}
+              onChange={(e) => setFilters({ ...filters, showtakable: e.target.checked })}
+            />
+            <label>Show Takable Courses</label>
+          </div>
+
+          <div className="filter-option">
+            <input
+              type="checkbox"
+              checked={filters.showonlyrequirements}
+              onChange={(e) => setFilters({ ...filters, showonlyrequirements: e.target.checked})}
+            />
+            <label>Show Only Requirements</label>
+          </div>
+
+          <div className="department-select">
+            <select 
+              name="department" 
+              id="department"
+              value={filters.department}
+              onChange={(e) => setFilters({ ...filters, department: e.target.value })}
+            >
+              <option value="ALL">All Departments</option>
+              <option value="CPSC">CPSC</option>
+              <option value="MATH">MATH</option>
+            </select>
+            <label>Select Department</label>
+          </div>
         </div>
       </div>
+
       {filteredCourses.map((course) => (
         <div className="course" key={course.CourseID}>
           <h3>

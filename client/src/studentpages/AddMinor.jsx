@@ -30,7 +30,11 @@ const AddMinor = () => {
     return (
         <div className='form'>
             <h1>Add Minor</h1>
-            <input type="text" placeholder="Minor" onChange={handleChange} name="Minor" /> 
+            <select name="Minor" onChange={handleChange}>
+                <option value="">Select a Minor</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Math">Math</option>
+            </select>
             <button onClick={handleClick}>Add</button>
         </div>
     );

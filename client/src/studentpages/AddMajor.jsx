@@ -30,7 +30,11 @@ const AddMajor = () => {
     return (
         <div className='form'>
             <h1>Add Major</h1>
-            <input type="text" placeholder="Major" onChange={handleChange} name="Major" /> 
+            <select name="Major" onChange={handleChange}>
+                <option value="">Select a Major</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Math">Mathematics</option>
+            </select>
             <button onClick={handleClick}>Add</button>
         </div>
     );

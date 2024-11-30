@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const MyDegree = () => {
   return (
     <div>
+      <h1>My Degree</h1>
       <button>
         <Link to="/studentpages/Major">View My Major</Link>
       </button>
