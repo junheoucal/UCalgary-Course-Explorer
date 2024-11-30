@@ -22,6 +22,9 @@ import CoursePage from './studentpages/CoursePage';
 import Home from './Home';
 import AddMajor from './studentpages/AddMajor';
 import AddMinor from './studentpages/AddMinor';
+import Tutorial from './itpages/Tutorial';
+import UpdateTutorial from './itpages/UpdateTutorial';
+import AddTutorial from './itpages/AddTutorial';
 import "./style.css";
 
 
