@@ -5,14 +5,14 @@ const MyCourses = () => {
   return (
     <div>
       <h1>My Courses</h1>
-      <button>
+      {/* <button>
         <Link to="/studentpages/CurrentEnrollment">Current Courses</Link>
+      </button> */}
+      <button>
+        <Link to="/studentpages/PastCourses">View My Past Courses</Link>
       </button>
       <button>
-        <Link to="/studentpages/PastCourses">Past Courses</Link>
-      </button>
-      <button>
-        <Link to="/studentpages/StudentHome">Back</Link>
+        <Link to="/studentpages/home">Back</Link>
       </button>
     </div>
   );

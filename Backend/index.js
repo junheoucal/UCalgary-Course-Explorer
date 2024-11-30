@@ -506,6 +506,145 @@ app.post("/itregister", (req, res) => {
   });
 });
 
+// Get Student's past courses
+app.get("/studentpages/PastCourses", (req, res) => {
+  const { StudentID } = req.query;
+
+  const q = `
+    SELECT 
+      c.CourseID, 
+      c.Course_Name, 
+      c.Level, 
+      c.Course_Description, 
+      c.Credits, 
+      c.Department_Name, 
+      c.Concentration_Name, 
+      p.CourseID AS Prerequisite, 
+      a.CourseID AS Antirequisite,
+      ma.Major,
+      mi.Minor
+    FROM 
+      taken_by t
+    LEFT JOIN 
+      course c ON t.CourseID = c.CourseID
+    LEFT JOIN 
+      prerequisite p ON c.CourseID = p.Required_CourseID
+    LEFT JOIN 
+      antirequisite a ON c.CourseID = a.Conflicting_CourseID
+    LEFT JOIN
+      major_requirement ma ON c.CourseID = ma.CourseID
+    LEFT JOIN
+      minor_requirement mi ON c.CourseID = mi.CourseID
+    WHERE 
+      t.StudentID = ?
+  `;
+
+  db.query(q, [StudentID], (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error fetching past courses", error: err });
+    }
+    res.status(200).json(data);
+  });
+});
+
+// Get Student's Major 
+app.get("/studentpages/Major", (req, res) => {
+  const { StudentID } = req.query;
+
+  const q = `
+    SELECT 
+      tm.StudentID, 
+      tm.Major
+    FROM 
+      take_major tm
+    WHERE 
+      tm.StudentID = ?
+  `;
+
+  db.query(q, [StudentID], (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error fetching major", error: err });
+    }
+    res.status(200).json(data);
+  });
+});
+
+// Get Student's Minor
+app.get("/studentpages/Minor", (req, res) => {
+  const { StudentID } = req.query;
+
+  const q = `
+    SELECT 
+      tn.StudentID, 
+      tn.Minor 
+    FROM 
+      take_minor tn
+    WHERE 
+      tn.StudentID = ?
+  `;
+
+  db.query(q, [StudentID], (err, data) => {
+    if (err) {
+      return res.status(500).json({ message: "Error fetching minor", error: err });
+    }
+    res.status(200).json(data);
+  });
+});
+
+// delete Major
+app.delete("/studentpages/Major/:Major/:StudentID", (req, res) => {
+  const { Major, StudentID } = req.params;
+
+  const q = "DELETE FROM take_major WHERE Major = ? AND StudentID = ?";
+  db.query(q, [Major, StudentID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Major has been deleted");
+  });
+});
+
+// Delete Minor
+app.delete("/studentpages/Minor/:Major/:StudentID", (req, res) => {
+  const { Major, StudentID } = req.params;
+
+  const q = "DELETE FROM take_minor WHERE Minor = ? AND StudentID = ?";
+  db.query(q, [Major, StudentID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Minor has been deleted");
+  });
+});
+
+// Add Major
+app.post("/studentpages/addmajor/:StudentID", (req, res) => {
+  const { Major } = req.body;
+  const { StudentID } = req.params; 
+
+  const q = `
+    INSERT INTO take_major 
+    (StudentID, Major)
+    VALUES (?, ?)`;
+
+  db.query(q, [StudentID, Major], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(201).json("Major has been created for Student");
+  });
+});
+
+// Add Minor
+app.post("/studentpages/addminor/:StudentID", (req, res) => {
+  const { Minor } = req.body;
+  const { StudentID } = req.params; 
+
+  const q = `
+    INSERT INTO take_minor 
+    (StudentID, Minor)
+    VALUES (?, ?)`;
+
+  db.query(q, [StudentID, Minor], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(201).json("Minor has been created for Student");
+  });
+});
+
 app.use((req, res) => {
   res.status(404).json({ message: `Route ${req.url} not found` });
 });
