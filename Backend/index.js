@@ -16,7 +16,7 @@ const db = mysql.createConnection({
 });
 
 app.get("/course", (req, res) => {
-  const { showtaken, showantirequisites, showtakable, ucid } = req.query;
+  const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements } = req.query;
   let q = "SELECT * FROM course";
   const params = [];
   const conditions = [];
@@ -44,6 +44,17 @@ app.get("/course", (req, res) => {
       )
     )`);
     params.push(ucid);
+  }
+
+  if (showonlyrequirements === 'true') {
+    conditions.push("CourseID IN (SELECT CourseID FROM major_requirement WHERE Major IN (SELECT Major FROM take_major WHERE StudentID = ?) UNION SELECT CourseID FROM minor_requirement WHERE Minor IN (SELECT Minor FROM take_minor WHERE StudentID = ?))");
+    params.push(ucid, ucid);
+  }
+
+  if (department === 'CPSC') {
+    conditions.push("Department_Name = 'CPSC'");
+  } else if (department === 'MATH') {
+    conditions.push("Department_Name = 'MATH'");
   }
 
   // Add WHERE clause only if there are conditions

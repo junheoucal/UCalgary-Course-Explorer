@@ -11,6 +11,7 @@ const CourseSearch = () => {
     showtaken: true,
     showantirequisites: true,
     showtakable: false,
+    showonlyrequirements: false,
     department: 'ALL'
   });
   const [ucid, setUcid] = useState(auth.UCID);
@@ -76,6 +77,14 @@ const CourseSearch = () => {
             onChange={(e) => setFilters({ ...filters, showtakable: e.target.checked })}
           />
           Show Takable Courses
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={filters.showonlyrequirements}
+            onChange={(e) => setFilters({ ...filters, showonlyrequirements: e.target.checked})}
+          />
+          Show Only Requirements
         </div>
         <div>
           <select 
