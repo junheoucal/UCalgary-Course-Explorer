@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 const CourseSearch = () => {
+  const { auth } = useAuth();
   const [courses, setCourse] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
@@ -10,24 +12,30 @@ const CourseSearch = () => {
     showantirequisites: true,
     showtakable: false,
   });
+  const [ucid, setUcid] = useState(auth.UCID);
 
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/course");
+        const res = await axios.get("http://localhost:8800/course", {
+          params: {
+            ...filters,
+            ucid: ucid
+          }
+        });
         setCourse(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchAllCourses();
-  }, []);
+  }, [filters, ucid]);
 
-  const filteredCourses = courses.filter(
+  const filteredCourses = Array.isArray(courses) ? courses.filter(
     (course) =>
       course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
       course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) : [];
 
   return (
     <div>
@@ -40,10 +48,34 @@ const CourseSearch = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ padding: "8px", margin: "10px 0", width: "200px" }}
         />
-        <input type="checkbox" checked = {filters.showtaken}
-          onChange={(e) => setFilters({...filters, showtaken: e.target.checked})}
+        <div>
+        <input
+            type="checkbox"
+            checked={filters.showtaken}
+            onChange={(e) =>
+              setFilters({ ...filters, showtaken: e.target.checked })
+            }
         />
         Show Taken Courses
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={filters.showantirequisites}
+            onChange={(e) =>
+              setFilters({ ...filters, showantirequisites: e.target.checked })
+            }
+          />
+          Show Antirequisites
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={filters.showtakable}
+            onChange={(e) => setFilters({ ...filters, showtakable: e.target.checked })}
+          />
+          Show Takable Courses
+        </div>
       </div>
       {filteredCourses.map((course) => (
         <div className="course" key={course.CourseID}>

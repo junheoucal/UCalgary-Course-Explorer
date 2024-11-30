@@ -57,7 +57,7 @@ function App() {
               }
             />
             <Route path="/studentpages/login" element={<StudentLogin />} />
-            <Route path="/studentpages/register" element={<Register />} />
+            <Route path="/studentpages/register" element={<StudentRegister />} />
             <Route
               path="/studentpages/*"
               element={
