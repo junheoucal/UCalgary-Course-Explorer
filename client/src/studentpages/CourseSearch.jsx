@@ -11,6 +11,7 @@ const CourseSearch = () => {
     showtaken: true,
     showantirequisites: true,
     showtakable: false,
+    department: 'ALL'
   });
   const [ucid, setUcid] = useState(auth.UCID);
 
@@ -75,6 +76,19 @@ const CourseSearch = () => {
             onChange={(e) => setFilters({ ...filters, showtakable: e.target.checked })}
           />
           Show Takable Courses
+        </div>
+        <div>
+          <select 
+            name="department" 
+            id="department"
+            value={filters.department}
+            onChange={(e) => setFilters({ ...filters, department: e.target.value })}
+          >
+            <option value="ALL">All Departments</option>
+            <option value="CPSC">CPSC</option>
+            <option value="MATH">MATH</option>
+          </select>
+          Select Department
         </div>
       </div>
       {filteredCourses.map((course) => (
