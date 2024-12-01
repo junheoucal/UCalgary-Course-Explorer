@@ -25,6 +25,8 @@ import AddMinor from './studentpages/AddMinor';
 import Tutorial from './itpages/Tutorial';
 import UpdateTutorial from './itpages/UpdateTutorial';
 import AddTutorial from './itpages/AddTutorial';
+import ManagePrerequisite from './itpages/ManagePrerequisite';
+import ManageAntirequisite from './itpages/ManageAntirequisite';
 import "./style.css";
 
 
@@ -46,9 +48,11 @@ function App() {
                     <Route path="course" element={<Course />} />
                     <Route path="lecture/*" element={<Lecture />} />
                     <Route path="addcourse" element={<AddCourse />} />
+                    <Route path="manageprerequisite/:CourseID" element={<ManagePrerequisite />} />
+                    <Route path="manageantirequisite/:CourseID" element={<ManageAntirequisite />} />
                     <Route path="updatecourse/*" element={<UpdateCourse />} />
                     <Route path="addlecture" element={<AddLecture />} />
-                    <Route path="updatelcture/*" element={<UpdateLecture />} />
+                    <Route path="updatelecture/*" element={<UpdateLecture />} />
                     <Route path="addtutorial/*" element={<AddTutorial />} />
                     <Route path="tutorial/:CourseID" element={<Tutorial />} />
                     <Route

@@ -451,6 +451,82 @@ app.put("/lecture/:CourseID", (req, res) => {
   );
 });
 
+app.post("/prerequisite", (req, res) => {
+  const { CourseID, Required_CourseID } = req.body;
+  const q = "INSERT INTO prerequisite (CourseID, Required_CourseID) VALUES (?, ?)";
+  
+  db.query(q, [CourseID, Required_CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Prerequisite has been added successfully");
+  });
+});
+
+// Add these new endpoints
+
+// Get prerequisites for a course
+app.get("/prerequisite/:CourseID", (req, res) => {
+  const { CourseID } = req.params;
+  const q = `
+    SELECT p.Required_CourseID, c.Course_Name 
+    FROM prerequisite p
+    JOIN course c ON p.Required_CourseID = c.CourseID
+    WHERE p.CourseID = ?`;
+  
+  db.query(q, [CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
+// Delete a prerequisite
+app.delete("/prerequisite/:CourseID/:Required_CourseID", (req, res) => {
+  const { CourseID, Required_CourseID } = req.params;
+  const q = "DELETE FROM prerequisite WHERE CourseID = ? AND Required_CourseID = ?";
+  
+  db.query(q, [CourseID, Required_CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Prerequisite has been removed successfully");
+  });
+});
+
+// Get antirequisites for a course
+app.get("/antirequisite/:CourseID", (req, res) => {
+  const { CourseID } = req.params;
+  const q = `
+    SELECT a.Conflicting_CourseID, c.Course_Name 
+    FROM antirequisite a
+    JOIN course c ON a.Conflicting_CourseID = c.CourseID
+    WHERE a.CourseID = ?`;
+  
+  db.query(q, [CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
+// Add an antirequisite
+app.post("/antirequisite", (req, res) => {
+  const { CourseID, Conflicting_CourseID } = req.body;
+  const q = "INSERT INTO antirequisite (CourseID, Conflicting_CourseID) VALUES (?, ?)";
+  
+  db.query(q, [CourseID, Conflicting_CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Antirequisite has been added successfully");
+  });
+});
+
+// Delete an antirequisite
+app.delete("/antirequisite/:CourseID/:Conflicting_CourseID", (req, res) => {
+  const { CourseID, Conflicting_CourseID } = req.params;
+  const q = "DELETE FROM antirequisite WHERE CourseID = ? AND Conflicting_CourseID = ?";
+  
+  db.query(q, [CourseID, Conflicting_CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Antirequisite has been removed successfully");
+  });
+});
+
+
 // Delete a lecture
 app.delete("/lecture/:lectureId", (req, res) => {
   const { lectureId } = req.params;

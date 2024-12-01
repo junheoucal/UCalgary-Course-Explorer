@@ -58,6 +58,12 @@ const Course = () => {
             <button className="tutorial">
               <Link to={`/itpages/Tutorial/${course.CourseID}`}>Tutorial</Link>
             </button>
+            <button className="manageprerequisite">
+              <Link to={`/itpages/manageprerequisite/${course.CourseID}`}>Manage Prerequisites</Link>
+            </button>
+            <button className="manageantirequisite">
+              <Link to={`/itpages/manageantirequisite/${course.CourseID}`}>Manage Antirequisites</Link>
+            </button>
           </div>
         ))}
       </div>
