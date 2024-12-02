@@ -682,6 +682,20 @@ app.get("/studentpages/MinorRequirements/:Minor/:StudentID", (req, res) => {
   });
 });
 
+// Remove a course from student's taken courses
+app.delete("/take_course/:CourseID/:StudentID", (req, res) => {
+  const { CourseID, StudentID } = req.params;
+  const q = "DELETE FROM taken_by WHERE CourseID = ? AND StudentID = ?";
+  
+  db.query(q, [CourseID, StudentID], (err, data) => {
+    if (err) {
+      console.error("Error removing course:", err);
+      return res.status(500).json(err);
+    }
+    return res.json("Course has been removed successfully");
+  });
+});
+
 // Get Student's Major 
 app.get("/studentpages/Major", (req, res) => {
   const { StudentID } = req.query;

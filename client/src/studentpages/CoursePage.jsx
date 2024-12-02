@@ -7,21 +7,34 @@ const CoursePage = () => {
   const { auth } = useAuth();
   const { CourseID } = useParams();
   const [courses, setCourse] = useState([]);
+  const [isTaken, setIsTaken] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchAllCourses = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8800/course/${CourseID}`);
-        setCourse(res.data);
+        // Fetch course details
+        const courseRes = await axios.get(`http://localhost:8800/course/${CourseID}`);
+        setCourse(courseRes.data);
+
+        // Check if student has taken this course
+        const takenRes = await axios.get(`http://localhost:8800/course`, {
+          params: {
+            ucid: auth.UCID,
+          }
+        });
+        const isTakenCourse = takenRes.data.some(
+          course => course.CourseID === CourseID && course.is_taken
+        );
+        setIsTaken(isTakenCourse);
       } catch (err) {
         console.log(err);
       }
     };
-    fetchAllCourses();
-  }, [CourseID]);
+    fetchData();
+  }, [CourseID, auth.UCID]);
 
-  const handleClick = async () => {
+  const handleAdd = async () => {
     try {
       console.log("Attempting to add course with UCID:", auth.UCID);
       const response = await axios.post(
@@ -43,6 +56,23 @@ const CoursePage = () => {
     }
   };
 
+  const handleRemove = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8800/take_course/${CourseID}/${auth.UCID}`
+      );
+      
+      if (response.data.error) {
+        console.error("Error removing course:", response.data.error);
+        return;
+      }
+
+      navigate("/studentpages/home");
+    } catch (err) {
+      console.error("Error removing course:", err.response?.data || err.message);
+    }
+  };
+
   if (!courses.length) return <div>Loading...</div>;
 
   return (
@@ -57,7 +87,15 @@ const CoursePage = () => {
           <p>{course.Department_Name} Department</p>
         </div>
       ))}
-      <button onClick={handleClick}>Add to My Courses</button>
+      
+      {isTaken ? (
+        <button onClick={handleRemove} className="remove-button">
+          Remove from My Courses
+        </button>
+      ) : (
+        <button onClick={handleAdd}>Add to My Courses</button>
+      )}
+      
       <button>
         <Link to="/studentpages/CourseSearch">Back to Course Search</Link>
       </button>
