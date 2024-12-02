@@ -5,6 +5,37 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow: scroll;
+}
+
+.login-buttons {
+  display: flex;
+  gap: 50px;
+}
+
+.student-section,
+.it-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+button {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: purple;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+}
+
+.login-page {
+  margin: 10px;
+  gap: 10px;
+  display: flex;
 }
 
 .courses {
