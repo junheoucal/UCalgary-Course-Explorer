@@ -11,14 +11,65 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "m*ziLE4GD9YiCUHtgk-j",
+  password: "junheo",
   database: "coursedb",
 });
 
 app.get("/course", (req, res) => {
-  const q = "SELECT * FROM course";
-  db.query(q, (err, data) => {
-    if (err) return res.json(err);
+  const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements } = req.query;
+  let q = "SELECT * FROM course";
+  const params = [];
+  const conditions = [];
+
+  if (showtaken === 'false') {
+    conditions.push("CourseID NOT IN (SELECT CourseID FROM taken_by WHERE StudentID = ?)");
+    params.push(ucid);
+  }
+
+  if (showantirequisites === 'false') {
+    conditions.push("CourseID NOT IN (SELECT Conflicting_CourseID FROM antirequisite WHERE antirequisite.CourseID IN (SELECT CourseID FROM taken_by WHERE StudentID = ?))");
+    params.push(ucid);
+  }
+
+  if (showtakable === 'true') {
+    // This checks if all prerequisites for a course are in the student's taken courses
+    conditions.push(`NOT EXISTS (
+      SELECT Required_CourseID 
+      FROM prerequisite 
+      WHERE CourseID = course.CourseID 
+      AND Required_CourseID NOT IN (
+        SELECT CourseID 
+        FROM taken_by 
+        WHERE StudentID = ?
+      )
+    )`);
+    params.push(ucid);
+  }
+
+  if (showonlyrequirements === 'true') {
+    conditions.push("CourseID IN (SELECT CourseID FROM major_requirement WHERE Major IN (SELECT Major FROM take_major WHERE StudentID = ?) UNION SELECT CourseID FROM minor_requirement WHERE Minor IN (SELECT Minor FROM take_minor WHERE StudentID = ?))");
+    params.push(ucid, ucid);
+  }
+
+  if (department === 'CPSC') {
+    conditions.push("Department_Name = 'CPSC'");
+  } else if (department === 'MATH') {
+    conditions.push("Department_Name = 'MATH'");
+  }
+
+  // Add WHERE clause only if there are conditions
+  if (conditions.length > 0) {
+    q += " WHERE " + conditions.join(" AND ");
+  }
+
+  console.log('Query:', q); // Debug log
+  console.log('Params:', params); // Debug log
+
+  db.query(q, params, (err, data) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json(err);
+    }
     return res.json(data);
   });
 });
