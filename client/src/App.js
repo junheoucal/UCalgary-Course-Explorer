@@ -27,6 +27,7 @@ import UpdateTutorial from './itpages/UpdateTutorial';
 import AddTutorial from './itpages/AddTutorial';
 import ManagePrerequisite from './itpages/ManagePrerequisite';
 import ManageAntirequisite from './itpages/ManageAntirequisite';
+import CourseMap from './studentpages/CourseMap';
 import "./style.css";
 
 
@@ -78,6 +79,7 @@ function App() {
                   <Route path="addmajor" element={<AddMajor />} />
                   <Route path="addminor" element={<AddMinor />} />
                   <Route path="coursesearch" element={<CourseSearch />} />
+                  <Route path="coursemap" element={<CourseMap />} />
                 </Routes>
               </AuthGuard>
             } />

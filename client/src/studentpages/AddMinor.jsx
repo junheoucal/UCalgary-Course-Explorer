@@ -33,7 +33,7 @@ const AddMinor = () => {
             <select name="Minor" onChange={handleChange}>
                 <option value="">Select a Minor</option>
                 <option value="Computer Science">Computer Science</option>
-                <option value="Math">Math</option>
+                <option value="Mathematics">Mathematics</option>
             </select>
             <button onClick={handleClick}>Add</button>
         </div>

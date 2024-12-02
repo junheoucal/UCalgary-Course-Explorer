@@ -17,26 +17,30 @@ const db = mysql.createConnection({
 
 app.get("/course", (req, res) => {
   const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements } = req.query;
-  let q = "SELECT * FROM course";
-  const params = [];
+  let q = `
+    SELECT c.*, 
+           CASE WHEN t.StudentID IS NOT NULL THEN TRUE ELSE FALSE END as is_taken
+    FROM course c
+    LEFT JOIN taken_by t ON c.CourseID = t.CourseID AND t.StudentID = ?
+  `;
+  const params = [ucid];
   const conditions = [];
 
   if (showtaken === 'false') {
-    conditions.push("CourseID NOT IN (SELECT CourseID FROM taken_by WHERE StudentID = ?)");
+    conditions.push("c.CourseID NOT IN (SELECT CourseID FROM taken_by WHERE StudentID = ?)");
     params.push(ucid);
   }
 
   if (showantirequisites === 'false') {
-    conditions.push("CourseID NOT IN (SELECT Conflicting_CourseID FROM antirequisite WHERE antirequisite.CourseID IN (SELECT CourseID FROM taken_by WHERE StudentID = ?))");
+    conditions.push("c.CourseID NOT IN (SELECT Conflicting_CourseID FROM antirequisite WHERE antirequisite.CourseID IN (SELECT CourseID FROM taken_by WHERE StudentID = ?))");
     params.push(ucid);
   }
 
   if (showtakable === 'true') {
-    // This checks if all prerequisites for a course are in the student's taken courses
     conditions.push(`NOT EXISTS (
       SELECT Required_CourseID 
       FROM prerequisite 
-      WHERE CourseID = course.CourseID 
+      WHERE CourseID = c.CourseID 
       AND Required_CourseID NOT IN (
         SELECT CourseID 
         FROM taken_by 
@@ -47,14 +51,14 @@ app.get("/course", (req, res) => {
   }
 
   if (showonlyrequirements === 'true') {
-    conditions.push("CourseID IN (SELECT CourseID FROM major_requirement WHERE Major IN (SELECT Major FROM take_major WHERE StudentID = ?) UNION SELECT CourseID FROM minor_requirement WHERE Minor IN (SELECT Minor FROM take_minor WHERE StudentID = ?))");
+    conditions.push("c.CourseID IN (SELECT CourseID FROM major_requirement WHERE Major IN (SELECT Major FROM take_major WHERE StudentID = ?) UNION SELECT CourseID FROM minor_requirement WHERE Minor IN (SELECT Minor FROM take_minor WHERE StudentID = ?))");
     params.push(ucid, ucid);
   }
 
   if (department === 'CPSC') {
-    conditions.push("Department_Name = 'CPSC'");
+    conditions.push("c.Department_Name = 'CPSC'");
   } else if (department === 'MATH') {
-    conditions.push("Department_Name = 'MATH'");
+    conditions.push("c.Department_Name = 'MATH'");
   }
 
   // Add WHERE clause only if there are conditions
@@ -582,6 +586,32 @@ app.post("/itregister", (req, res) => {
   });
 });
 
+// Get required courses for a major and their completion status
+app.get("/studentpages/MajorRequirements/:Major/:StudentID", (req, res) => {
+  const { Major, StudentID } = req.params;
+  
+  const q = `
+    SELECT 
+      c.CourseID,
+      c.Course_Name,
+      c.Credits,
+      CASE 
+        WHEN t.StudentID IS NOT NULL THEN TRUE 
+        ELSE FALSE 
+      END as is_completed
+    FROM major_requirement mr
+    JOIN course c ON mr.CourseID = c.CourseID
+    LEFT JOIN taken_by t ON c.CourseID = t.CourseID AND t.StudentID = ?
+    WHERE mr.Major = ?
+    ORDER BY c.CourseID
+  `;
+
+  db.query(q, [StudentID, Major], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
 // Get Student's past courses
 app.get("/studentpages/PastCourses", (req, res) => {
   const { StudentID } = req.query;
@@ -594,11 +624,11 @@ app.get("/studentpages/PastCourses", (req, res) => {
       c.Course_Description, 
       c.Credits, 
       c.Department_Name, 
-      c.Concentration_Name, 
-      p.CourseID AS Prerequisite, 
-      a.CourseID AS Antirequisite,
-      ma.Major,
-      mi.Minor
+      c.Concentration_Name,
+      GROUP_CONCAT(DISTINCT p.CourseID) AS Prerequisites,
+      GROUP_CONCAT(DISTINCT a.CourseID) AS Antirequisites,
+      GROUP_CONCAT(DISTINCT ma.Major) AS Majors,
+      GROUP_CONCAT(DISTINCT mi.Minor) AS Minors
     FROM 
       taken_by t
     LEFT JOIN 
@@ -613,6 +643,9 @@ app.get("/studentpages/PastCourses", (req, res) => {
       minor_requirement mi ON c.CourseID = mi.CourseID
     WHERE 
       t.StudentID = ?
+    GROUP BY 
+      c.CourseID, c.Course_Name, c.Level, c.Course_Description, 
+      c.Credits, c.Department_Name, c.Concentration_Name
   `;
 
   db.query(q, [StudentID], (err, data) => {

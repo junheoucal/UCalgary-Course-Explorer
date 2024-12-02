@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from "../context/AuthProvider"; 
-// import "./MyCourses.css";
-
 const MyCourses = () => {
-  const { auth } = useAuth();
+    const { auth } = useAuth();
     const [pastCourses, setPastCourses] = useState([]);
 
     useEffect(() => {
@@ -14,8 +12,6 @@ const MyCourses = () => {
                 const res = await axios.get("http://localhost:8800/studentpages/PastCourses", {
                     params: { StudentID: auth.UCID },
                 });
-                console.log("Fetched past courses:", res.data); 
-                console.log("Student ID:", auth.UCID);
                 setPastCourses(res.data); 
             } catch (err) {
                 console.error("Error fetching past courses:", err.response ? err.response.data : err.message);
@@ -23,6 +19,22 @@ const MyCourses = () => {
         };
         fetchAllPastCourses();
     }, [auth.UCID]);
+
+    const renderList = (items) => {
+        if (!items) return 'None';
+        const itemList = items.split(',');
+        return itemList.length > 0 ? (
+            <ul className="course-list">
+                {itemList.map((item, index) => (
+                    <li key={index}>
+                        <Link to={`/studentpages/CoursePage/${item}`}>
+                            {item}
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        ) : 'None';
+    };
 
     return (
         <div className="courses-container">
@@ -56,11 +68,11 @@ const MyCourses = () => {
                         </div>
                         <div className="course-detail">
                             <span className="label">Prerequisite to:</span>
-                            <span className="value">{pastCourse.Prerequisite || 'N/A'}</span>
+                            <span className="value">{renderList(pastCourse.Prerequisites)}</span>
                         </div>
                         <div className="course-detail">
                             <span className="label">Antirequisite of:</span>
-                            <span className="value">{pastCourse.Antirequisite || 'N/A'}</span>
+                            <span className="value">{renderList(pastCourse.Antirequisites)}</span>
                         </div>
                     </div>
                 ))}

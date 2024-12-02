@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-import "./CourseSearch.css";
 
 const CourseSearch = () => {
   const { auth } = useAuth();
@@ -53,7 +52,9 @@ const CourseSearch = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        
+        <button>
+            <Link to="/studentpages/coursemap">Open Map View</Link>
+          </button>
         <div className="filters-container">
           <div className="filter-option">
             <input
