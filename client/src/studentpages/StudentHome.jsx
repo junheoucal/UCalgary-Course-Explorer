@@ -7,17 +7,19 @@ const StudentHome = () => {
   return (
     console.log(auth.UCID),
     (
-      <div className="student-home">
+      <div>
         <h1>Student Home Page</h1>
-        <button>
-          <Link to="/studentpages/MyCourses">My Courses</Link>
-        </button>
-        <button>
-          <Link to="/studentpages/CourseSearch">Course Search</Link>
-        </button>
-        <button>
-          <Link to="/studentpages/MyDegree">My Degree</Link>
-        </button>
+        <div className="student-home">
+          <button>
+            <Link to="/studentpages/MyCourses">My Courses</Link>
+          </button>
+          <button>
+            <Link to="/studentpages/CourseSearch">Course Search</Link>
+          </button>
+          <button>
+            <Link to="/studentpages/MyDegree">My Degree</Link>
+          </button>
+        </div>
       </div>
     )
   );

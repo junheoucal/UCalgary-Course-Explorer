@@ -1,52 +1,53 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 function Register() {
-  const [UCID, setUCID] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [UCID, setUCID] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     // Basic validation
     if (!UCID || !password || !confirmPassword) {
-      setError('Please fill in all fields');
+      setError("Please fill in all fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     // You might want to add more validation here
     // e.g., UCID format, password strength, etc.
 
-    axios.post("http://localhost:8800/itregister", { UCID, password })
+    axios
+      .post("http://localhost:8800/itregister", { UCID, password })
       .then((res) => {
-        console.log('Registration response:', res.data);
+        console.log("Registration response:", res.data);
         if (res.data.success) {
-          setSuccess('Registration successful! You can now login.');
+          setSuccess("Registration successful! You can now login.");
           // Clear form
-          setUCID('');
-          setPassword('');
-          setConfirmPassword('');
+          setUCID("");
+          setPassword("");
+          setConfirmPassword("");
           // Optionally redirect to login page after a delay
           setTimeout(() => {
-            window.location.href = './login';
+            window.location.href = "./login";
           }, 2000);
         } else {
-          setError(res.data.message || 'Registration failed');
+          setError(res.data.message || "Registration failed");
         }
       })
       .catch((err) => {
-        console.error('Registration error:', err);
-        setError('An error occurred during registration');
+        console.error("Registration error:", err);
+        setError("An error occurred during registration");
       });
   };
 
@@ -55,10 +56,10 @@ function Register() {
       <h2>IT Staff Registration</h2>
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="UCID">UCID:</label>
+          <label htmlFor="UCID"></label>
           <input
             type="text"
             id="UCID"
@@ -69,7 +70,7 @@ function Register() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password"></label>
           <input
             type="password"
             id="password"
@@ -80,7 +81,7 @@ function Register() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <label htmlFor="confirmPassword"></label>
           <input
             type="password"
             id="confirmPassword"

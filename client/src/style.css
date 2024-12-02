@@ -14,7 +14,8 @@
 }
 
 .student-section,
-.it-section {
+.it-section,
+.student-home {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -36,6 +37,14 @@ button:hover {
   margin: 10px;
   gap: 10px;
   display: flex;
+}
+
+.form-group {
+  margin: 10px;
+}
+
+.error-message {
+  color: rgb(181, 20, 20);
 }
 
 .courses {
