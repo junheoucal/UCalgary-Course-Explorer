@@ -656,6 +656,32 @@ app.get("/studentpages/PastCourses", (req, res) => {
   });
 });
 
+// Get required courses for a minor and their completion status
+app.get("/studentpages/MinorRequirements/:Minor/:StudentID", (req, res) => {
+  const { Minor, StudentID } = req.params;
+  
+  const q = `
+    SELECT 
+      c.CourseID,
+      c.Course_Name,
+      c.Credits,
+      CASE 
+        WHEN t.StudentID IS NOT NULL THEN TRUE 
+        ELSE FALSE 
+      END as is_completed
+    FROM minor_requirement mr
+    JOIN course c ON mr.CourseID = c.CourseID
+    LEFT JOIN taken_by t ON c.CourseID = t.CourseID AND t.StudentID = ?
+    WHERE mr.Minor = ?
+    ORDER BY c.CourseID
+  `;
+
+  db.query(q, [StudentID, Minor], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
 // Get Student's Major 
 app.get("/studentpages/Major", (req, res) => {
   const { StudentID } = req.query;
