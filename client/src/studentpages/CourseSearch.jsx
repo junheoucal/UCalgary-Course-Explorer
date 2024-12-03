@@ -12,7 +12,7 @@ const CourseSearch = () => {
     showantirequisites: true,
     showtakable: false,
     showonlyrequirements: false,
-    department: 'ALL'
+    department: "ALL",
   });
   const [ucid, setUcid] = useState(auth.UCID);
 
@@ -22,8 +22,8 @@ const CourseSearch = () => {
         const res = await axios.get("http://localhost:8800/course", {
           params: {
             ...filters,
-            ucid: ucid
-          }
+            ucid: ucid,
+          },
         });
         setCourse(res.data);
       } catch (err) {
@@ -33,11 +33,13 @@ const CourseSearch = () => {
     fetchAllCourses();
   }, [filters, ucid]);
 
-  const filteredCourses = Array.isArray(courses) ? courses.filter(
-    (course) =>
-      course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
-  ) : [];
+  const filteredCourses = Array.isArray(courses)
+    ? courses.filter(
+        (course) =>
+          course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
 
   return (
     <div>
@@ -53,8 +55,8 @@ const CourseSearch = () => {
           />
         </div>
         <button>
-            <Link to="/studentpages/coursemap">Open Map View</Link>
-          </button>
+          <Link to="/studentpages/coursemap">Open Map View</Link>
+        </button>
         <div className="filters-container">
           <div className="filter-option">
             <input
@@ -82,7 +84,9 @@ const CourseSearch = () => {
             <input
               type="checkbox"
               checked={filters.showtakable}
-              onChange={(e) => setFilters({ ...filters, showtakable: e.target.checked })}
+              onChange={(e) =>
+                setFilters({ ...filters, showtakable: e.target.checked })
+              }
             />
             <label>Show Takable Courses</label>
           </div>
@@ -91,17 +95,24 @@ const CourseSearch = () => {
             <input
               type="checkbox"
               checked={filters.showonlyrequirements}
-              onChange={(e) => setFilters({ ...filters, showonlyrequirements: e.target.checked})}
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  showonlyrequirements: e.target.checked,
+                })
+              }
             />
             <label>Show Only Requirements</label>
           </div>
 
           <div className="department-select">
-            <select 
-              name="department" 
+            <select
+              name="department"
               id="department"
               value={filters.department}
-              onChange={(e) => setFilters({ ...filters, department: e.target.value })}
+              onChange={(e) =>
+                setFilters({ ...filters, department: e.target.value })
+              }
             >
               <option value="ALL">All Departments</option>
               <option value="CPSC">CPSC</option>

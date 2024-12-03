@@ -1,35 +1,34 @@
-import { AuthProvider } from './context/AuthContext';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ITLogin from './itpages/Login';
-import StudentLogin from './studentpages/Login';
-import StudentRegister from './studentpages/Register';
-import Register from './itpages/Register';
-import Course from './itpages/Course';
-import AuthGuard from './components/AuthGuard';
-import AddCourse from './itpages/AddCourse';
-import UpdateCourse from './itpages/UpdateCourse';
-import Lecture from './itpages/Lecture';
-import AddLecture from './itpages/AddLecture';
-import UpdateLecture from './itpages/UpdateLecture';
-import StudentHome from './studentpages/StudentHome';
-import Minor from './studentpages/Minor';
-import Major from './studentpages/Major';
-import PastCourses from './studentpages/PastCourses';
-import MyDegree from './studentpages/MyDegree';
-import CourseSearch from './studentpages/CourseSearch';
-import MyCourses from './studentpages/MyCourses';
-import CoursePage from './studentpages/CoursePage';
-import Home from './Home';
-import AddMajor from './studentpages/AddMajor';
-import AddMinor from './studentpages/AddMinor';
-import Tutorial from './itpages/Tutorial';
-import UpdateTutorial from './itpages/UpdateTutorial';
-import AddTutorial from './itpages/AddTutorial';
-import ManagePrerequisite from './itpages/ManagePrerequisite';
-import ManageAntirequisite from './itpages/ManageAntirequisite';
-import CourseMap from './studentpages/CourseMap';
+import { AuthProvider } from "./context/AuthContext";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ITLogin from "./itpages/Login";
+import StudentLogin from "./studentpages/Login";
+import StudentRegister from "./studentpages/Register";
+import Register from "./itpages/Register";
+import Course from "./itpages/Course";
+import AuthGuard from "./components/AuthGuard";
+import AddCourse from "./itpages/AddCourse";
+import UpdateCourse from "./itpages/UpdateCourse";
+import Lecture from "./itpages/Lecture";
+import AddLecture from "./itpages/AddLecture";
+import UpdateLecture from "./itpages/UpdateLecture";
+import StudentHome from "./studentpages/StudentHome";
+import Minor from "./studentpages/Minor";
+import Major from "./studentpages/Major";
+import PastCourses from "./studentpages/PastCourses";
+import MyDegree from "./studentpages/MyDegree";
+import CourseSearch from "./studentpages/CourseSearch";
+import MyCourses from "./studentpages/MyCourses";
+import CoursePage from "./studentpages/CoursePage";
+import Home from "./Home";
+import AddMajor from "./studentpages/AddMajor";
+import AddMinor from "./studentpages/AddMinor";
+import Tutorial from "./itpages/Tutorial";
+import UpdateTutorial from "./itpages/UpdateTutorial";
+import AddTutorial from "./itpages/AddTutorial";
+import ManagePrerequisite from "./itpages/ManagePrerequisite";
+import ManageAntirequisite from "./itpages/ManageAntirequisite";
+import CourseMap from "./studentpages/CourseMap";
 import "./style.css";
-
 
 function App() {
   return (
@@ -49,8 +48,14 @@ function App() {
                     <Route path="course" element={<Course />} />
                     <Route path="lecture/*" element={<Lecture />} />
                     <Route path="addcourse" element={<AddCourse />} />
-                    <Route path="manageprerequisite/:CourseID" element={<ManagePrerequisite />} />
-                    <Route path="manageantirequisite/:CourseID" element={<ManageAntirequisite />} />
+                    <Route
+                      path="manageprerequisite/:CourseID"
+                      element={<ManagePrerequisite />}
+                    />
+                    <Route
+                      path="manageantirequisite/:CourseID"
+                      element={<ManageAntirequisite />}
+                    />
                     <Route path="updatecourse/*" element={<UpdateCourse />} />
                     <Route path="addlecture" element={<AddLecture />} />
                     <Route path="updatelecture/*" element={<UpdateLecture />} />
@@ -65,24 +70,33 @@ function App() {
               }
             />
             <Route path="/studentpages/login" element={<StudentLogin />} />
-            <Route path="/studentpages/register" element={<StudentRegister />} />
-            <Route path="/studentpages/*" element={
-              <AuthGuard userType="student">
-                <Routes>
-                  <Route path="home" element={<StudentHome />} />
-                  <Route path="CoursePage/:CourseID" element={<CoursePage />} />
-                  <Route path="mycourses" element={<MyCourses />} />
-                  <Route path="minor" element={<Minor />} />
-                  <Route path="major" element={<Major />} />
-                  <Route path="pastcourses" element={<PastCourses />} />
-                  <Route path="mydegree" element={<MyDegree />} />
-                  <Route path="addmajor" element={<AddMajor />} />
-                  <Route path="addminor" element={<AddMinor />} />
-                  <Route path="coursesearch" element={<CourseSearch />} />
-                  <Route path="coursemap" element={<CourseMap />} />
-                </Routes>
-              </AuthGuard>
-            } />
+            <Route
+              path="/studentpages/register"
+              element={<StudentRegister />}
+            />
+            <Route
+              path="/studentpages/*"
+              element={
+                <AuthGuard userType="student">
+                  <Routes>
+                    <Route path="home" element={<StudentHome />} />
+                    <Route
+                      path="CoursePage/:CourseID"
+                      element={<CoursePage />}
+                    />
+                    <Route path="mycourses" element={<MyCourses />} />
+                    <Route path="minor" element={<Minor />} />
+                    <Route path="major" element={<Major />} />
+                    <Route path="pastcourses" element={<PastCourses />} />
+                    <Route path="mydegree" element={<MyDegree />} />
+                    <Route path="addmajor" element={<AddMajor />} />
+                    <Route path="addminor" element={<AddMinor />} />
+                    <Route path="coursesearch" element={<CourseSearch />} />
+                    <Route path="coursemap" element={<CourseMap />} />
+                  </Routes>
+                </AuthGuard>
+              }
+            />
             <Route path="/" element={<Navigate to="/Home" replace />} />
             <Route path="*" element={<Navigate to="/Home" replace />} />
           </Routes>

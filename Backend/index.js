@@ -11,12 +11,19 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "junheo",
+  password: "m*ziLE4GD9YiCUHtgk-j",
   database: "coursedb",
 });
 
 app.get("/course", (req, res) => {
-  const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements } = req.query;
+  const {
+    showtaken,
+    showantirequisites,
+    showtakable,
+    ucid,
+    department,
+    showonlyrequirements,
+  } = req.query;
   let q = `
     SELECT c.*, 
            CASE WHEN t.StudentID IS NOT NULL THEN TRUE ELSE FALSE END as is_taken
@@ -26,17 +33,21 @@ app.get("/course", (req, res) => {
   const params = [ucid];
   const conditions = [];
 
-  if (showtaken === 'false') {
-    conditions.push("c.CourseID NOT IN (SELECT CourseID FROM taken_by WHERE StudentID = ?)");
+  if (showtaken === "false") {
+    conditions.push(
+      "c.CourseID NOT IN (SELECT CourseID FROM taken_by WHERE StudentID = ?)"
+    );
     params.push(ucid);
   }
 
-  if (showantirequisites === 'false') {
-    conditions.push("c.CourseID NOT IN (SELECT Conflicting_CourseID FROM antirequisite WHERE antirequisite.CourseID IN (SELECT CourseID FROM taken_by WHERE StudentID = ?))");
+  if (showantirequisites === "false") {
+    conditions.push(
+      "c.CourseID NOT IN (SELECT Conflicting_CourseID FROM antirequisite WHERE antirequisite.CourseID IN (SELECT CourseID FROM taken_by WHERE StudentID = ?))"
+    );
     params.push(ucid);
   }
 
-  if (showtakable === 'true') {
+  if (showtakable === "true") {
     conditions.push(`NOT EXISTS (
       SELECT Required_CourseID 
       FROM prerequisite 
@@ -50,14 +61,16 @@ app.get("/course", (req, res) => {
     params.push(ucid);
   }
 
-  if (showonlyrequirements === 'true') {
-    conditions.push("c.CourseID IN (SELECT CourseID FROM major_requirement WHERE Major IN (SELECT Major FROM take_major WHERE StudentID = ?) UNION SELECT CourseID FROM minor_requirement WHERE Minor IN (SELECT Minor FROM take_minor WHERE StudentID = ?))");
+  if (showonlyrequirements === "true") {
+    conditions.push(
+      "c.CourseID IN (SELECT CourseID FROM major_requirement WHERE Major IN (SELECT Major FROM take_major WHERE StudentID = ?) UNION SELECT CourseID FROM minor_requirement WHERE Minor IN (SELECT Minor FROM take_minor WHERE StudentID = ?))"
+    );
     params.push(ucid, ucid);
   }
 
-  if (department === 'CPSC') {
+  if (department === "CPSC") {
     conditions.push("c.Department_Name = 'CPSC'");
-  } else if (department === 'MATH') {
+  } else if (department === "MATH") {
     conditions.push("c.Department_Name = 'MATH'");
   }
 
@@ -66,12 +79,12 @@ app.get("/course", (req, res) => {
     q += " WHERE " + conditions.join(" AND ");
   }
 
-  console.log('Query:', q); // Debug log
-  console.log('Params:', params); // Debug log
+  console.log("Query:", q); // Debug log
+  console.log("Params:", params); // Debug log
 
   db.query(q, params, (err, data) => {
     if (err) {
-      console.error('Database error:', err);
+      console.error("Database error:", err);
       return res.status(500).json(err);
     }
     return res.json(data);
@@ -457,8 +470,9 @@ app.put("/lecture/:CourseID", (req, res) => {
 
 app.post("/prerequisite", (req, res) => {
   const { CourseID, Required_CourseID } = req.body;
-  const q = "INSERT INTO prerequisite (CourseID, Required_CourseID) VALUES (?, ?)";
-  
+  const q =
+    "INSERT INTO prerequisite (CourseID, Required_CourseID) VALUES (?, ?)";
+
   db.query(q, [CourseID, Required_CourseID], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json("Prerequisite has been added successfully");
@@ -475,7 +489,7 @@ app.get("/prerequisite/:CourseID", (req, res) => {
     FROM prerequisite p
     JOIN course c ON p.Required_CourseID = c.CourseID
     WHERE p.CourseID = ?`;
-  
+
   db.query(q, [CourseID], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json(data);
@@ -485,8 +499,9 @@ app.get("/prerequisite/:CourseID", (req, res) => {
 // Delete a prerequisite
 app.delete("/prerequisite/:CourseID/:Required_CourseID", (req, res) => {
   const { CourseID, Required_CourseID } = req.params;
-  const q = "DELETE FROM prerequisite WHERE CourseID = ? AND Required_CourseID = ?";
-  
+  const q =
+    "DELETE FROM prerequisite WHERE CourseID = ? AND Required_CourseID = ?";
+
   db.query(q, [CourseID, Required_CourseID], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json("Prerequisite has been removed successfully");
@@ -501,7 +516,7 @@ app.get("/antirequisite/:CourseID", (req, res) => {
     FROM antirequisite a
     JOIN course c ON a.Conflicting_CourseID = c.CourseID
     WHERE a.CourseID = ?`;
-  
+
   db.query(q, [CourseID], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json(data);
@@ -511,8 +526,9 @@ app.get("/antirequisite/:CourseID", (req, res) => {
 // Add an antirequisite
 app.post("/antirequisite", (req, res) => {
   const { CourseID, Conflicting_CourseID } = req.body;
-  const q = "INSERT INTO antirequisite (CourseID, Conflicting_CourseID) VALUES (?, ?)";
-  
+  const q =
+    "INSERT INTO antirequisite (CourseID, Conflicting_CourseID) VALUES (?, ?)";
+
   db.query(q, [CourseID, Conflicting_CourseID], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json("Antirequisite has been added successfully");
@@ -522,14 +538,14 @@ app.post("/antirequisite", (req, res) => {
 // Delete an antirequisite
 app.delete("/antirequisite/:CourseID/:Conflicting_CourseID", (req, res) => {
   const { CourseID, Conflicting_CourseID } = req.params;
-  const q = "DELETE FROM antirequisite WHERE CourseID = ? AND Conflicting_CourseID = ?";
-  
+  const q =
+    "DELETE FROM antirequisite WHERE CourseID = ? AND Conflicting_CourseID = ?";
+
   db.query(q, [CourseID, Conflicting_CourseID], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json("Antirequisite has been removed successfully");
   });
 });
-
 
 // Delete a lecture
 app.delete("/lecture/:lectureId", (req, res) => {
@@ -589,7 +605,7 @@ app.post("/itregister", (req, res) => {
 // Get required courses for a major and their completion status
 app.get("/studentpages/MajorRequirements/:Major/:StudentID", (req, res) => {
   const { Major, StudentID } = req.params;
-  
+
   const q = `
     SELECT 
       c.CourseID,
@@ -650,7 +666,9 @@ app.get("/studentpages/PastCourses", (req, res) => {
 
   db.query(q, [StudentID], (err, data) => {
     if (err) {
-      return res.status(500).json({ message: "Error fetching past courses", error: err });
+      return res
+        .status(500)
+        .json({ message: "Error fetching past courses", error: err });
     }
     res.status(200).json(data);
   });
@@ -659,7 +677,7 @@ app.get("/studentpages/PastCourses", (req, res) => {
 // Get required courses for a minor and their completion status
 app.get("/studentpages/MinorRequirements/:Minor/:StudentID", (req, res) => {
   const { Minor, StudentID } = req.params;
-  
+
   const q = `
     SELECT 
       c.CourseID,
@@ -686,7 +704,7 @@ app.get("/studentpages/MinorRequirements/:Minor/:StudentID", (req, res) => {
 app.delete("/take_course/:CourseID/:StudentID", (req, res) => {
   const { CourseID, StudentID } = req.params;
   const q = "DELETE FROM taken_by WHERE CourseID = ? AND StudentID = ?";
-  
+
   db.query(q, [CourseID, StudentID], (err, data) => {
     if (err) {
       console.error("Error removing course:", err);
@@ -696,7 +714,7 @@ app.delete("/take_course/:CourseID/:StudentID", (req, res) => {
   });
 });
 
-// Get Student's Major 
+// Get Student's Major
 app.get("/studentpages/Major", (req, res) => {
   const { StudentID } = req.query;
 
@@ -712,7 +730,9 @@ app.get("/studentpages/Major", (req, res) => {
 
   db.query(q, [StudentID], (err, data) => {
     if (err) {
-      return res.status(500).json({ message: "Error fetching major", error: err });
+      return res
+        .status(500)
+        .json({ message: "Error fetching major", error: err });
     }
     res.status(200).json(data);
   });
@@ -734,7 +754,9 @@ app.get("/studentpages/Minor", (req, res) => {
 
   db.query(q, [StudentID], (err, data) => {
     if (err) {
-      return res.status(500).json({ message: "Error fetching minor", error: err });
+      return res
+        .status(500)
+        .json({ message: "Error fetching minor", error: err });
     }
     res.status(200).json(data);
   });
@@ -765,7 +787,7 @@ app.delete("/studentpages/Minor/:Major/:StudentID", (req, res) => {
 // Add Major
 app.post("/studentpages/addmajor/:StudentID", (req, res) => {
   const { Major } = req.body;
-  const { StudentID } = req.params; 
+  const { StudentID } = req.params;
 
   const q = `
     INSERT INTO take_major 
@@ -781,7 +803,7 @@ app.post("/studentpages/addmajor/:StudentID", (req, res) => {
 // Add Minor
 app.post("/studentpages/addminor/:StudentID", (req, res) => {
   const { Minor } = req.body;
-  const { StudentID } = req.params; 
+  const { StudentID } = req.params;
 
   const q = `
     INSERT INTO take_minor 
