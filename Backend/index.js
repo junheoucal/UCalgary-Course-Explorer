@@ -16,7 +16,7 @@ const db = mysql.createConnection({
 });
 
 app.get("/course", (req, res) => {
-  const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements } = req.query;
+  const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements, searchTerm } = req.query;
   let q = `
     SELECT c.*, 
            CASE WHEN t.StudentID IS NOT NULL THEN TRUE ELSE FALSE END as is_taken
@@ -59,6 +59,12 @@ app.get("/course", (req, res) => {
     conditions.push("c.Department_Name = 'CPSC'");
   } else if (department === 'MATH') {
     conditions.push("c.Department_Name = 'MATH'");
+  }
+
+  // Add search condition if searchTerm is provided
+  if (searchTerm) {
+    conditions.push("(c.CourseID LIKE ? OR c.Course_Name LIKE ?)");
+    params.push(`%${searchTerm}%`, `%${searchTerm}%`);
   }
 
   // Add WHERE clause only if there are conditions

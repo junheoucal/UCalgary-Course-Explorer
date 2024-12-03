@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
 const CourseSearch = () => {
@@ -22,7 +22,8 @@ const CourseSearch = () => {
         const res = await axios.get("http://localhost:8800/course", {
           params: {
             ...filters,
-            ucid: ucid
+            ucid: ucid,
+            searchTerm: searchTerm
           }
         });
         setCourse(res.data);
@@ -31,13 +32,7 @@ const CourseSearch = () => {
       }
     };
     fetchAllCourses();
-  }, [filters, ucid]);
-
-  const filteredCourses = Array.isArray(courses) ? courses.filter(
-    (course) =>
-      course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
-  ) : [];
+  }, [filters, ucid, searchTerm]);
 
   return (
     <div>
@@ -53,8 +48,8 @@ const CourseSearch = () => {
           />
         </div>
         <button>
-            <Link to="/studentpages/coursemap">Open Map View</Link>
-          </button>
+          <Link to="/studentpages/coursemap">Open Map View</Link>
+        </button>
         <div className="filters-container">
           <div className="filter-option">
             <input
@@ -112,7 +107,7 @@ const CourseSearch = () => {
         </div>
       </div>
 
-      {filteredCourses.map((course) => (
+      {courses.map((course) => (
         <div className="course" key={course.CourseID}>
           <h3>
             <Link to={`/studentpages/CoursePage/${course.CourseID}`}>
@@ -128,4 +123,5 @@ const CourseSearch = () => {
     </div>
   );
 };
+
 export default CourseSearch;
