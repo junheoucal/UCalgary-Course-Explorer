@@ -47,12 +47,12 @@ function App() {
                   <Routes>
                     <Route path="home" element={<Home />} />
                     <Route path="course" element={<Course />} />
-                    <Route path="lecture/*" element={<Lecture />} />
-                    <Route path="addcourse" element={<AddCourse />} />
+                    <Route path="lecture/:CourseID" element={<Lecture />} />
+                    <Route path="add" element={<AddCourse />} />
                     <Route path="manageprerequisite/:CourseID" element={<ManagePrerequisite />} />
                     <Route path="manageantirequisite/:CourseID" element={<ManageAntirequisite />} />
                     <Route path="updatecourse/*" element={<UpdateCourse />} />
-                    <Route path="addlecture" element={<AddLecture />} />
+                    <Route path="addlecture/*" element={<AddLecture />} />
                     <Route path="updatelecture/*" element={<UpdateLecture />} />
                     <Route path="addtutorial/*" element={<AddTutorial />} />
                     <Route path="tutorial/:CourseID" element={<Tutorial />} />
@@ -80,6 +80,7 @@ function App() {
                   <Route path="addminor" element={<AddMinor />} />
                   <Route path="coursesearch" element={<CourseSearch />} />
                   <Route path="coursemap" element={<CourseMap />} />
+                  <Route path="studenthome" element={<StudentHome />} />
                 </Routes>
               </AuthGuard>
             } />
