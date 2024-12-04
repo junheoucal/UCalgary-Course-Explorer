@@ -95,15 +95,14 @@ app.get("/course/:CourseID", (req, res) => {
 
 app.post("/course", (req, res) => {
   const q =
-    "INSERT INTO course (`CourseID`, `Course_Name`, `Level`, `Course_Description`, `Credits`, `Department_Name`, `Concentration_Name`) VALUES (?)";
+    "INSERT INTO course (`CourseID`, `Course_Name`, `Level`, `Course_Description`, `Credits`, `Department_Name`) VALUES (?)";
   const values = [
     req.body.CourseID,
     req.body.Course_Name,
     req.body.Level,
     req.body.Course_Description,
     req.body.Credits,
-    req.body.Department_Name,
-    req.body.Concentration_Name,
+    req.body.Department_Name
   ];
 
   db.query(q, [values], (err, data) => {
@@ -115,7 +114,7 @@ app.post("/course", (req, res) => {
 app.put("/course/:CourseID", (req, res) => {
   const courseID = req.params.CourseID;
   const q =
-    "UPDATE course SET `Course_Name` = ?, `Level` = ?, `Course_Description`= ?, `Credits` = ?, `Department_Name` = ?, `Concentration_Name` = ? WHERE CourseID = ?";
+    "UPDATE course SET `Course_Name` = ?, `Level` = ?, `Course_Description`= ?, `Credits` = ?, `Department_Name` = ? WHERE CourseID = ?";
 
   const values = [
     req.body.Course_Name,
@@ -123,7 +122,6 @@ app.put("/course/:CourseID", (req, res) => {
     req.body.Course_Description,
     req.body.Credits,
     req.body.Department_Name,
-    req.body.Concentration_Name,
   ];
 
   db.query(q, [...values, courseID], (err, data) => {
@@ -630,7 +628,6 @@ app.get("/studentpages/PastCourses", (req, res) => {
       c.Course_Description, 
       c.Credits, 
       c.Department_Name, 
-      c.Concentration_Name,
       GROUP_CONCAT(DISTINCT p.CourseID) AS Prerequisites,
       GROUP_CONCAT(DISTINCT a.CourseID) AS Antirequisites,
       GROUP_CONCAT(DISTINCT ma.Major) AS Majors,
@@ -651,7 +648,7 @@ app.get("/studentpages/PastCourses", (req, res) => {
       t.StudentID = ?
     GROUP BY 
       c.CourseID, c.Course_Name, c.Level, c.Course_Description, 
-      c.Credits, c.Department_Name, c.Concentration_Name
+      c.Credits, c.Department_Name
   `;
 
   db.query(q, [StudentID], (err, data) => {
