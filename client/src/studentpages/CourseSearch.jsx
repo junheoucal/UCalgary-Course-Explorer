@@ -42,7 +42,15 @@ const CourseSearch = () => {
     : [];
 
   return (
-    <div>
+    <div className="ucalgary-container">
+      <div className="header">
+        <img
+          src="/uofc-logo.png"
+          alt="University of Calgary Logo"
+          className="ucalgary-logo"
+        />
+      </div>
+
       <h1>Course Search</h1>
       <div className="course-search">
         <div className="search-controls">

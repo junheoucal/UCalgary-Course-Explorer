@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../stylepages/Register.css";
 
 function Register() {
   const [UCID, setUCID] = useState("");
@@ -49,7 +50,15 @@ function Register() {
   };
 
   return (
-    <div>
+    <div className="ucalgary-container">
+      <div className="header">
+        <img
+          src="/uofc-logo.png"
+          alt="University of Calgary Logo"
+          className="ucalgary-logo"
+        />
+      </div>
+
       <h2>Student Registration</h2>
       <div className="register-container">
         {error && <div className="error-message">{error}</div>}
