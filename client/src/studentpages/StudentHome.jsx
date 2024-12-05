@@ -7,15 +7,7 @@ const StudentHome = () => {
   return (
     console.log(auth.UCID),
     (
-      <div className="ucalgary-container">
-        <div className="header">
-          <img
-            src="/uofc-logo.png"
-            alt="University of Calgary Logo"
-            className="ucalgary-logo"
-          />
-        </div>
-
+      <div>
         <h1>Student Home Page</h1>
         <div className="student-home">
           <button>

@@ -1,32 +1,14 @@
 .App {
   height: 100vh;
-  padding: 0;
+  padding: 5px 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: 100%;
-  margin: 0;
+  overflow: scroll;
 }
 
-.ucalgary-container {
-  min-height: 100vh;
-  background-color: #fff;
-  padding: 0;
-  width: 100%;
-}
-
-.header {
-  background-color: #e30c00;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.ucalgary-logo {
-  height: 100px;
-}
-
-/* .login-buttons {
+.login-buttons {
   display: flex;
   gap: 50px;
 }
@@ -37,17 +19,17 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-} */
-/* 
+}
+
 button {
   padding: 10px 15px;
   border: 1px solid #ccc;
   background-color: white;
   color: purple;
   cursor: pointer;
-} */
+}
 
-/*button:hover {
+button:hover {
   background-color: #f0f0f0;
 }
 
@@ -111,4 +93,4 @@ input {
   color: white;
   font-weight: bold;
   cursor: pointer;
-} */
+}

@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthProvider";
-import "../stylepages/Login.css";
 
-// const LOGIN_URL = "/studentlogin";
+const LOGIN_URL = "/studentlogin";
 function Login() {
   const { setAuth } = useContext(AuthContext);
   const [UCID, setUCID] = useState("");
@@ -44,15 +43,7 @@ function Login() {
   };
 
   return (
-    <div className="ucalgary-container">
-      <div className="header">
-        <img
-          src="/uofc-logo.png"
-          alt="University of Calgary Logo"
-          className="ucalgary-logo"
-        />
-      </div>
-
+    <div>
       <div>
         {error && <div style={{ color: "red" }}>{error}</div>}
         <form onSubmit={handleSubmit}>

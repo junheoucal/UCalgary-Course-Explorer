@@ -28,7 +28,7 @@ import AddTutorial from "./itpages/AddTutorial";
 import ManagePrerequisite from "./itpages/ManagePrerequisite";
 import ManageAntirequisite from "./itpages/ManageAntirequisite";
 import CourseMap from "./studentpages/CourseMap";
-import "./stylepages/style.css";
+import "./style.css";
 
 function App() {
   return (

@@ -14,15 +14,7 @@ const AddCurrent = () => {
   });
 
   return (
-    <div className="ucalgary-container">
-      <div className="header">
-        <img
-          src="/uofc-logo.png"
-          alt="University of Calgary Logo"
-          className="ucalgary-logo"
-        />
-      </div>
-
+    <div>
       <h1>Add Current Course</h1>
     </div>
   );

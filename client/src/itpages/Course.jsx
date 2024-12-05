@@ -29,14 +29,7 @@ const Course = () => {
   };
 
   return (
-    <div className="ucalgary-container">
-      <div className="header">
-        <img
-          src="/uofc-logo.png"
-          alt="University of Calgary Logo"
-          className="ucalgary-logo"
-        />
-      </div>
+    <div>
       <h1> Course List </h1>
       <div className="course">
         {courses.map((course) => (
@@ -66,14 +59,10 @@ const Course = () => {
               <Link to={`/itpages/Tutorial/${course.CourseID}`}>Tutorial</Link>
             </button>
             <button className="manageprerequisite">
-              <Link to={`/itpages/manageprerequisite/${course.CourseID}`}>
-                Manage Prerequisites
-              </Link>
+              <Link to={`/itpages/manageprerequisite/${course.CourseID}`}>Manage Prerequisites</Link>
             </button>
             <button className="manageantirequisite">
-              <Link to={`/itpages/manageantirequisite/${course.CourseID}`}>
-                Manage Antirequisites
-              </Link>
+              <Link to={`/itpages/manageantirequisite/${course.CourseID}`}>Manage Antirequisites</Link>
             </button>
           </div>
         ))}
