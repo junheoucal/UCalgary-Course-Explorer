@@ -14,7 +14,7 @@ const db = mysql.createConnection({
   password: "junheo",
   database: "coursedb",
 });
-
+ // comment
 app.get("/course", (req, res) => {
   const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements, searchTerm } = req.query;
   let q = `
