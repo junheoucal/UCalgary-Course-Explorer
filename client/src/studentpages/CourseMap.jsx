@@ -27,6 +27,7 @@ const CourseMap = () => {
           params: {
             ...filters,
             ucid: ucid,
+            searchTerm: searchTerm,
           },
         });
         setCourse(coursesRes.data);
@@ -48,7 +49,7 @@ const CourseMap = () => {
       }
     };
     fetchData();
-  }, [filters, ucid]);
+  }, [filters, ucid, searchTerm]);
 
   // D3 visualization
   useEffect(() => {
@@ -57,13 +58,9 @@ const CourseMap = () => {
     // Clear previous visualization
     d3.select(svgRef.current).selectAll("*").remove();
 
-    // Filter courses based on search term and create a Set for quick lookup
-    const filteredCourses = courses.filter(
-      (course) =>
-        course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const filteredCourseIds = new Set(filteredCourses.map((c) => c.CourseID));
+    // Use courses directly instead of filtering them
+    const filteredCourses = courses;
+    const filteredCourseIds = new Set(courses.map((c) => c.CourseID));
 
     // Filter prerequisites to only include connections between visible courses
     const filteredPrerequisites = prerequisites.filter(
@@ -74,6 +71,12 @@ const CourseMap = () => {
 
     const width = 1000;
     const height = 600;
+
+    // Initialize node positions in the center
+    filteredCourses.forEach((course) => {
+      course.x = width / 2 + (Math.random() - 0.5) * 100; // Add small random offset
+      course.y = height / 2 + (Math.random() - 0.5) * 100;
+    });
 
     const svg = d3
       .select(svgRef.current)
@@ -90,9 +93,11 @@ const CourseMap = () => {
           .id((d) => d.CourseID)
           .distance(100)
       )
-      .force("charge", d3.forceManyBody().strength(-300))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(50));
+      .force("charge", d3.forceManyBody().strength(-300)) // Reduced repulsion
+      .force("center", d3.forceCenter(width / 2, height / 2).strength(0.3)) // Reduced centering force
+      .force("collision", d3.forceCollide().radius(50))
+      .force("x", d3.forceX(width / 2).strength(0.05)) // Reduced X-centering force
+      .force("y", d3.forceY(height / 2).strength(0.05)); // Reduced Y-centering force
 
     // Calculate the total distance the arrow needs to be offset
     const CIRCLE_RADIUS = 30;

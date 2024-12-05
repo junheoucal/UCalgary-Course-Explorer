@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
 const CourseSearch = () => {
@@ -23,6 +23,7 @@ const CourseSearch = () => {
           params: {
             ...filters,
             ucid: ucid,
+            searchTerm: searchTerm,
           },
         });
         setCourse(res.data);
@@ -131,7 +132,7 @@ const CourseSearch = () => {
         </div>
       </div>
 
-      {filteredCourses.map((course) => (
+      {courses.map((course) => (
         <div className="course" key={course.CourseID}>
           <h3>
             <Link to={`/studentpages/CoursePage/${course.CourseID}`}>
@@ -147,4 +148,5 @@ const CourseSearch = () => {
     </div>
   );
 };
+
 export default CourseSearch;
