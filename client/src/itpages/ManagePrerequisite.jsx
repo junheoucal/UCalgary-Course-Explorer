@@ -5,20 +5,13 @@ import { useParams } from "react-router-dom";
 const AddPrerequisite = () => {
   const [courses, setCourses] = useState([]);
   const [prerequisites, setPrerequisites] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [department, setDepartment] = useState('ALL');
   const { CourseID } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch all courses with filters
-        const coursesRes = await axios.get("http://localhost:8800/course", {
-          params: {
-            searchTerm: searchTerm,
-            department: department
-          }
-        });
+        // Fetch all courses
+        const coursesRes = await axios.get("http://localhost:8800/course");
         const filteredCourses = coursesRes.data.filter(course => course.CourseID !== CourseID);
         setCourses(filteredCourses);
 
@@ -30,7 +23,7 @@ const AddPrerequisite = () => {
       }
     };
     fetchData();
-  }, [CourseID, searchTerm, department]);
+  }, [CourseID]);
 
   const handleAddPrerequisite = async (requiredCourseID) => {
     try {
@@ -101,35 +94,6 @@ const AddPrerequisite = () => {
         </div>
       </div>
 
-      {/* Add Filter Controls */}
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <input
-          type="text"
-          placeholder="Search courses..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            padding: '8px',
-            borderRadius: '4px',
-            border: '1px solid #ddd'
-          }}
-        />
-        
-        <select
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-          style={{
-            padding: '8px',
-            borderRadius: '4px',
-            border: '1px solid #ddd'
-          }}
-        >
-          <option value="ALL">All Departments</option>
-          <option value="CPSC">CPSC</option>
-          <option value="MATH">MATH</option>
-        </select>
-      </div>
-
       {/* Available Courses Section */}
       <h2>Add New Prerequisites</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -153,6 +117,7 @@ const AddPrerequisite = () => {
               <p style={{ margin: '5px 0' }}>Description: {course.Course_Description}</p>
               <p style={{ margin: '5px 0' }}>Credits: {course.Credits}</p>
               <p style={{ margin: '5px 0' }}>Department: {course.Department_Name}</p>
+              <p style={{ margin: '5px 0' }}>Concentration: {course.Concentration_Name}</p>
             </div>
             <button 
               onClick={() => handleAddPrerequisite(course.CourseID)}

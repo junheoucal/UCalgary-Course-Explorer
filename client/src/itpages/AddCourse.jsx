@@ -10,6 +10,7 @@ const Add = () => {
     Course_Description: "",
     Credits: null,
     Department_Name: "",
+    Concentration_Name: "",
   });
 
   const navigate = useNavigate();
@@ -77,7 +78,12 @@ const Add = () => {
           onChange={handleChange}
           name="Department_Name"
         />
-
+        <input
+          type="text"
+          placeholder="Concentration_Name"
+          onChange={handleChange}
+          name="Concentration_Name"
+        />
         <button className="formButton" onClick={handleClick}>
           Add
         </button>

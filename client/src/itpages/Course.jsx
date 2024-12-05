@@ -6,25 +6,18 @@ import { useAuth } from "../context/AuthContext";
 
 const Course = () => {
   const [courses, setCourses] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [department, setDepartment] = useState('ALL');
 
   useEffect(() => {
     const fetchAllCourse = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/course", {
-          params: {
-            searchTerm: searchTerm,
-            department: department
-          }
-        });
+        const res = await axios.get("http://localhost:8800/course");
         setCourses(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchAllCourse();
-  }, [searchTerm, department]);
+  }, []);
 
   const handleDelete = async (CourseID) => {
     try {
@@ -45,27 +38,6 @@ const Course = () => {
         />
       </div>
       <h1> Course List </h1>
-      <div className="course-controls">
-        <input
-          className="search-input"
-          type="text"
-          placeholder="Search courses..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        
-        <div className="department-select">
-          <select 
-            name="department" 
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-          >
-            <option value="ALL">All Departments</option>
-            <option value="CPSC">CPSC</option>
-            <option value="MATH">MATH</option>
-          </select>
-        </div>
-      </div>
       <div className="course">
         {courses.map((course) => (
           <div className="course" key={course.CourseID}>
