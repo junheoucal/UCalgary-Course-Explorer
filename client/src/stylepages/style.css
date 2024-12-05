@@ -1,6 +1,6 @@
 .App {
   height: 100vh;
-  padding: 5px 100px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8,7 +8,24 @@
   overflow: scroll;
 }
 
-.login-buttons {
+.ucalgary-container {
+  min-height: 100vh;
+  background-color: #fff;
+  padding: 0;
+  width: 100%;
+}
+
+.header {
+  background-color: #e30c00;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ucalgary-logo {
+  height: 100px;
+}
+
+/* .login-buttons {
   display: flex;
   gap: 50px;
 }
@@ -93,4 +110,4 @@ input {
   color: white;
   font-weight: bold;
   cursor: pointer;
-}
+} */
