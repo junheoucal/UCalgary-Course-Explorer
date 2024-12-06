@@ -1,0 +1,19 @@
+.student-home {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.student-button {
+  padding: 10px 30px;
+  margin: 10px 10px;
+  border: 1px solid #cccc;
+  font-size: 20px;
+  width: 300px;
+}
+
+.student-button:hover {
+  background-color: #d8d4d4;
+  cursor: pointer;
+}

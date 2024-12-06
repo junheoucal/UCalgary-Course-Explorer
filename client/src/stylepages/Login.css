@@ -6,6 +6,7 @@
 
 .login-btn:hover {
   background-color: #d8d4d4;
+  cursor: pointer;
 }
 
 .login-page input {
