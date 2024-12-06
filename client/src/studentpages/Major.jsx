@@ -78,15 +78,13 @@ const Major = () => {
               className="degree-card"
               key={`${degree.StudentID}-${degree.Major}`}
             >
-              <div className="degree-header">
-                <h2>{degree.Major}</h2>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(degree.Major)}
-                >
-                  x
-                </button>
-              </div>
+              <h2>{degree.Major}</h2>
+              <button
+                className="delete-button"
+                onClick={() => handleDelete(degree.Major)}
+              >
+                x
+              </button>
 
               <div className="progress-bar">
                 <div
