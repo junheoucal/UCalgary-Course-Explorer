@@ -62,6 +62,7 @@ h1 {
 .add-card:hover .add-icon,
 .add-card:hover .add-text {
   color: #1e1e1e;
+  text-decoration: none;
 }
 
 .add-icon {
@@ -80,8 +81,19 @@ h1 {
 button {
   margin-top: 20px;
   margin-bottom: 40px;
-  /* justify-content: center; */
-  /* align-items: center; */
   font-size: 15px;
-  /* gap: 20px; */
+}
+
+.requirements-list a {
+  text-decoration: none;
+  color: purple;
+}
+
+.requirements-list a:hover {
+  text-decoration: underline;
+}
+
+.requirement-item {
+  text-decoration: none;
+  border-bottom: none;
 }

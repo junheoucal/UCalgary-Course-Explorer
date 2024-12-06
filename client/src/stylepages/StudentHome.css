@@ -3,12 +3,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-decoration: none;
 }
 
 .student-button {
   padding: 10px 30px;
   margin: 10px 10px;
   border: 1px solid #cccc;
+  border-radius: 10px;
   font-size: 20px;
   width: 300px;
 }
@@ -16,4 +18,25 @@
 .student-button:hover {
   background-color: #d8d4d4;
   cursor: pointer;
+}
+
+/* Remove underlines from all links */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Optional: add underline on hover */
+a:hover {
+  text-decoration: underline;
+}
+
+/* Specific styling for any special links */
+.student-link {
+  text-decoration: none;
+  color: purple; /* For links that need to be purple */
+}
+
+.student-link:hover {
+  text-decoration: underline; /* Optional: add underline on hover */
 }

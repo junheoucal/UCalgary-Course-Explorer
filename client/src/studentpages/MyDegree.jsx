@@ -20,6 +20,9 @@ const MyDegree = () => {
         <button className="student-button">
           <Link to="/studentpages/Minor">View My Minor</Link>
         </button>
+        <button>
+          <Link to="/studentpages/home">Back</Link>
+        </button>
       </div>
     </div>
   );
