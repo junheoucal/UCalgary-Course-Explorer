@@ -1,0 +1,17 @@
+.login-btn {
+  padding: 10px 30px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.login-btn:hover {
+  background-color: #d8d4d4;
+}
+
+.login-page input {
+  width: 300px;
+  padding: 12px 15px;
+  margin: 8px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import "../stylepages/Login.css";
 
 function Login() {
   const { setAuth } = useAuth();
@@ -45,7 +46,15 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="ucalgary-container">
+      <div className="header">
+        <img
+          src="/uofc-logo.png"
+          alt="University of Calgary Logo"
+          className="ucalgary-logo"
+        />
+      </div>
+
       <div>
         {error && <div style={{ color: "red" }}>{error}</div>}
         <form onSubmit={handleSubmit}>

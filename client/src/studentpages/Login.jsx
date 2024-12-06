@@ -43,7 +43,15 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="ucalgary-container">
+      <div className="header">
+        <img
+          src="/uofc-logo.png"
+          alt="University of Calgary Logo"
+          className="ucalgary-logo"
+        />
+      </div>
+
       <div>
         {error && <div style={{ color: "red" }}>{error}</div>}
         <form onSubmit={handleSubmit}>

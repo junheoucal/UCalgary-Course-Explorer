@@ -65,13 +65,10 @@ body {
 
 .student-login-button,
 .it-login-button {
-  /* display: block; */
-  /* width: 100%; */
   padding: 15px 15px;
   margin: 10px 0;
   background-color: #e30c00;
   border: 1px solid #cccc;
-  /* border-radius: 4px; */
 }
 
 .student-login-button:hover,

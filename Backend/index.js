@@ -11,7 +11,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "junheo",
+  password: "m*ziLE4GD9YiCUHtgk-j",
   database: "coursedb",
 });
 
@@ -109,8 +109,8 @@ app.post("/course", (req, res) => {
     req.body.Level,
     req.body.Course_Description,
     req.body.Credits,
-    req.body.Department_Name
-    ];
+    req.body.Department_Name,
+  ];
 
   db.query(q, [values], (err, data) => {
     if (err) return res.json(err);
@@ -129,7 +129,7 @@ app.put("/course/:CourseID", (req, res) => {
     req.body.Course_Description,
     req.body.Credits,
     req.body.Department_Name,
-    ];
+  ];
 
   db.query(q, [...values, courseID], (err, data) => {
     if (err) return res.json(err);

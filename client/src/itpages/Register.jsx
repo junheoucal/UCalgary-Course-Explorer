@@ -52,50 +52,60 @@ function Register() {
   };
 
   return (
-    <div className="register-container">
-      <h2>IT Staff Registration</h2>
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
+    <div className="ucalgary-container">
+      <div className="header">
+        <img
+          src="/uofc-logo.png"
+          alt="University of Calgary Logo"
+          className="ucalgary-logo"
+        />
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="UCID"></label>
-          <input
-            type="text"
-            id="UCID"
-            value={UCID}
-            onChange={(e) => setUCID(e.target.value)}
-            placeholder="Enter your UCID"
-          />
+      <div className="register-container">
+        <h2>IT Staff Registration</h2>
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="UCID"></label>
+            <input
+              type="text"
+              id="UCID"
+              value={UCID}
+              onChange={(e) => setUCID(e.target.value)}
+              placeholder="Enter your UCID"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password"></label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword"></label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm your password"
+            />
+          </div>
+
+          <button type="submit">Register</button>
+        </form>
+
+        <div className="login-link">
+          Already have an account? <a href="./login">Login here</a>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="password"></label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="confirmPassword"></label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm your password"
-          />
-        </div>
-
-        <button type="submit">Register</button>
-      </form>
-
-      <div className="login-link">
-        Already have an account? <a href="./login">Login here</a>
       </div>
     </div>
   );
