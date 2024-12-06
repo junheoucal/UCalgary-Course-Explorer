@@ -37,24 +37,24 @@
 }
 
 .back-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  border: none;
+  margin: 10px 0;
+  padding: 10px 30px;
+  border: 1px solid #cccc;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 .back-button a {
-  color: white;
+  /* color: white; */
   text-decoration: none;
 }
 
 .back-button:hover {
-  background-color: #0056b3;
+  background-color: #d8d4d4;
 }
 
-h1 {
+/* h1 {
   text-align: center;
   color: #333;
   margin-bottom: 30px;
-} 
+} */
