@@ -1,11 +1,14 @@
 .login-btn {
-  padding: 10px 30px;
+  padding: 10px 20px;
   margin: 10px 0;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .login-btn:hover {
   cursor: pointer;
+  background-color: #d8d4d4;
 }
 
 .login-page input {
@@ -14,4 +17,5 @@
   margin: 8px 0;
   font-size: 16px;
   border: 1px solid #ccc;
+  border-radius: 4px;
 }

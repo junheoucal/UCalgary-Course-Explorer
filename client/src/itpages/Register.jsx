@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../stylepages/Register.css";
 
 function Register() {
   const [UCID, setUCID] = useState("");
@@ -61,8 +62,8 @@ function Register() {
         />
       </div>
 
+      <h1>IT Staff Registration</h1>
       <div className="register-container">
-        <h2>IT Staff Registration</h2>
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
 
@@ -100,12 +101,17 @@ function Register() {
             />
           </div>
 
-          <button type="submit">Register</button>
+          <button type="submit" className="register-button">
+            Register
+          </button>
         </form>
+      </div>
 
-        <div className="login-link">
-          Already have an account? <a href="./login">Login here</a>
-        </div>
+      <div className="login-text">
+        Already have an account?
+        <a href="./login" className="login-link">
+          Login here
+        </a>
       </div>
     </div>
   );

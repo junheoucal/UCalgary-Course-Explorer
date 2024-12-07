@@ -12,6 +12,8 @@
   background-color: #fff;
   padding: 0;
   width: 100%;
+  position: relative;
+  /* overflow-y: auto; */
 }
 
 .header {
