@@ -51,7 +51,6 @@ h1 {
   justify-content: center;
   padding: 2rem;
   cursor: pointer;
-  text-decoration: none;
 }
 
 .add-card:hover {
@@ -62,14 +61,12 @@ h1 {
 .add-card:hover .add-icon,
 .add-card:hover .add-text {
   color: #1e1e1e;
-  text-decoration: none;
 }
 
 .add-icon {
   font-size: 40px;
   color: #666;
   margin-bottom: 10px;
-  border-bottom: none;
 }
 
 .add-text {

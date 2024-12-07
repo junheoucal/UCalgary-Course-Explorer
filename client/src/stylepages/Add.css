@@ -1,0 +1,40 @@
+.add-page {
+  padding: 2rem;
+}
+
+.add-form {
+  margin: 2rem auto;
+}
+
+select {
+  width: 300px;
+  padding: 12px 15px;
+  margin: 8px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+select:focus {
+  outline: none;
+  border-color: black;
+}
+
+.add-button {
+  padding: 12px 30px;
+  margin: 10px 0;
+  background-color: #e30c00;
+  border: 1px solid #cccc;
+  color: #fff;
+  min-width: 120px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #a80c04;
+}
+
+.button-group {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}

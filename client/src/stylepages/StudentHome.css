@@ -20,23 +20,16 @@
   cursor: pointer;
 }
 
-/* Remove underlines from all links */
 a {
   text-decoration: none;
   color: inherit;
 }
 
-/* Optional: add underline on hover */
-a:hover {
-  text-decoration: underline;
-}
-
-/* Specific styling for any special links */
 .student-link {
   text-decoration: none;
-  color: purple; /* For links that need to be purple */
+  color: purple;
 }
 
 .student-link:hover {
-  text-decoration: underline; /* Optional: add underline on hover */
+  text-decoration: underline;
 }
