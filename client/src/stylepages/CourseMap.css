@@ -1,0 +1,53 @@
+.search-input {
+  width: 300px;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filters-container {
+  margin: 1rem 0;
+  display: flex;
+  gap: 10px;
+  padding: 0 20px;
+  justify-content: center;
+}
+
+.department-select select {
+  width: 160px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.course {
+  margin: 2rem auto;
+  max-width: 500px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.button-group {
+  margin: 1rem 0;
+}
+
+.map-list-button {
+  padding: 12px 20px;
+  margin: 10px 0;
+  background-color: #e30c00;
+  border: 1px solid #cccc;
+  border-radius: 10px;
+  color: #fff;
+  min-width: 120px;
+  cursor: pointer;
+}
+
+.map-list-button:hover {
+  background-color: #a80c04;
+}
+
+.map-list-button a {
+  color: white;
+  text-decoration: none;
+}
