@@ -322,7 +322,7 @@ const CourseMap = () => {
         </div>
         <div className="button-group">
           <button>
-            <Link to="/studentpages/StudentHome">Back</Link>
+            <Link to="/studentpages/home">Back</Link>
           </button>
         </div>
       </div>

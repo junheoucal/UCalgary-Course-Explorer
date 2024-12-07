@@ -17,24 +17,6 @@ body {
   gap: 5px;
 }
 
-/* .ucalgary-container {
-  min-height: 100vh;
-  background-color: #fff;
-  padding: 0;
-  width: 100%;
-}
-
-.header {
-  background-color: #e30c00;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.ucalgary-logo {
-  height: 100px;
-  margin-left: 2rem;
-} */
-
 .main-content {
   max-width: 1200px;
   margin: 0 auto;
