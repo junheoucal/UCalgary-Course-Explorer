@@ -103,7 +103,7 @@ const MyCourses = () => {
           ))}
         </div>
         <button className="back-button">
-          <Link to="/studentpages/home">Go Back To Home</Link>
+          <Link to="/studentpages/home">Back</Link>
         </button>
       </div>
     </div>

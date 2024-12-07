@@ -124,22 +124,9 @@ const CourseSearch = () => {
               <label>Show Only Requirements</label>
             </div>
           </div>
-          {/* <div className="department-select">
-            <select
-              name="department"
-              value={filters.department}
-              onChange={(e) =>
-                setFilters({ ...filters, department: e.target.value })
-              }
-            >
-              <option value="ALL">All Departments</option>
-              <option value="CPSC">CPSC</option>
-              <option value="MATH">MATH</option>
-            </select>
-          </div> */}
 
           <div className="button-group">
-            <button className="search-button">
+            <button className="map-view-button">
               <Link to="/studentpages/coursemap">Open Map View</Link>
             </button>
           </div>
