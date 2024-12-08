@@ -10,7 +10,8 @@
 }
 
 .remove-button,
-.back-button {
+.back-button,
+.add-course-button {
   padding: 10px 20px;
   margin: 100px 5px;
   font-size: 14px;
@@ -19,7 +20,8 @@
 }
 
 .remove-button:hover,
-.back-button:hover {
+.back-button:hover,
+.add-course-button:hover {
   cursor: pointer;
   background-color: #d8d4d4;
 }

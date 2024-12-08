@@ -142,7 +142,9 @@ const CoursePage = () => {
             Remove from My Courses
           </button>
         ) : (
-          <button onClick={handleAdd}>Add to My Courses</button>
+          <button onClick={handleAdd} className="add-course-button">
+            Add to My Courses
+          </button>
         )}
 
         <button className="back-button">
