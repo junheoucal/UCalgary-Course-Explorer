@@ -5,6 +5,10 @@ import { useAuth } from "../context/AuthProvider";
 import * as d3 from "d3";
 import "../stylepages/CourseMap.css";
 
+// Add constants at the top of the file
+const ARROW_OFFSET = 9;  // Distance from node center to arrow tip
+const CIRCLE_RADIUS = 30; // Radius of course nodes
+
 const CourseMap = () => {
   const { auth } = useAuth();
   const [courses, setCourse] = useState([]);
@@ -58,15 +62,12 @@ const CourseMap = () => {
     // Clear previous visualization
     d3.select(svgRef.current).selectAll("*").remove();
 
-    // Filter courses based on search term and create a Set for quick lookup
     const filteredCourses = courses.filter(
       (course) =>
         course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     const filteredCourseIds = new Set(filteredCourses.map((c) => c.CourseID));
-
-    // Filter prerequisites to only include connections between visible courses
     const filteredPrerequisites = prerequisites.filter(
       (prereq) =>
         filteredCourseIds.has(prereq.source) &&
@@ -76,36 +77,70 @@ const CourseMap = () => {
     const width = 1000;
     const height = 600;
 
+    // Create the SVG container
     const svg = d3
       .select(svgRef.current)
       .attr("width", width)
       .attr("height", height);
 
-    // Create force simulation with filtered data
-    const simulation = d3
-      .forceSimulation(filteredCourses)
-      .force(
-        "link",
-        d3
-          .forceLink(filteredPrerequisites)
-          .id((d) => d.CourseID)
-          .distance(100)
-      )
-      .force("charge", d3.forceManyBody().strength(-300))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(50));
+    // Add zoom behavior
+    const zoom = d3.zoom()
+      .scaleExtent([0.1, 4])
+      .on("zoom", (event) => {
+        container.attr("transform", event.transform);
+      });
 
-    // Calculate the total distance the arrow needs to be offset
-    const CIRCLE_RADIUS = 30;
-    const ARROW_OFFSET = 9; // 5 pixels extra spacing
+    svg.call(zoom);
+
+    const container = svg.append("g")
+      .attr("class", "zoom-container");
+
+    // Add force simulation
+    const simulation = d3.forceSimulation(filteredCourses)
+      .force("link", d3.forceLink(filteredPrerequisites)
+        .id(d => d.CourseID)
+        .distance(150))
+      .force("charge", d3.forceManyBody().strength(-500))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("x", d3.forceX(width / 2).strength(0.1))
+      .force("y", d3.forceY(height / 2).strength(0.1))
+      .force("collision", d3.forceCollide().radius(60));
+
+    // Reset zoom button
+    svg.append("rect")
+      .attr("x", 10)
+      .attr("y", 10)
+      .attr("width", 80)
+      .attr("height", 30)
+      .attr("fill", "white")
+      .attr("stroke", "#999")
+      .attr("rx", 5)
+      .style("cursor", "pointer")
+      .on("click", () => {
+        svg.transition()
+          .duration(750)
+          .call(zoom.transform, d3.zoomIdentity);
+      });
+
+    svg.append("text")
+      .attr("x", 50)
+      .attr("y", 30)
+      .attr("text-anchor", "middle")
+      .style("font-size", "12px")
+      .text("Reset Zoom")
+      .style("cursor", "pointer")
+      .on("click", () => {
+        svg.transition()
+          .duration(750)
+          .call(zoom.transform, d3.zoomIdentity);
+      });
 
     // Define arrow marker with adjusted position
-    svg
-      .append("defs")
+    container.append("defs")
       .append("marker")
       .attr("id", "arrow")
       .attr("viewBox", "0 -5 10 10")
-      .attr("refX", ARROW_OFFSET) // This positions the arrow relative to the end point
+      .attr("refX", ARROW_OFFSET)
       .attr("refY", 0)
       .attr("markerWidth", 8)
       .attr("markerHeight", 8)
@@ -115,8 +150,7 @@ const CourseMap = () => {
       .attr("fill", "#999");
 
     // Draw links with adjusted endpoints
-    const links = svg
-      .append("g")
+    const links = container.append("g")
       .selectAll("line")
       .data(filteredPrerequisites)
       .enter()
@@ -127,15 +161,13 @@ const CourseMap = () => {
       .attr("marker-end", "url(#arrow)");
 
     // Create nodes (courses)
-    const nodes = svg
-      .append("g")
+    const nodes = container.append("g")
       .selectAll("g")
       .data(filteredCourses)
       .enter()
       .append("g")
       .call(
-        d3
-          .drag()
+        d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended)
@@ -207,7 +239,7 @@ const CourseMap = () => {
       nodes.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
 
-    // Drag functions
+    // Modify drag functions to work with zoom
     function dragstarted(event) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
@@ -224,6 +256,67 @@ const CourseMap = () => {
       event.subject.fx = null;
       event.subject.fy = null;
     }
+
+    // Add zoom controls
+    const zoomControls = svg.append("g")
+      .attr("class", "zoom-controls")
+      .attr("transform", `translate(${width - 100}, 20)`);
+
+    // Zoom in button
+    zoomControls.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 30)
+      .attr("height", 30)
+      .attr("fill", "white")
+      .attr("stroke", "#999")
+      .attr("rx", 5)
+      .style("cursor", "pointer")
+      .on("click", () => {
+        svg.transition()
+          .duration(750)
+          .call(zoom.scaleBy, 1.3);
+      });
+
+    zoomControls.append("text")
+      .attr("x", 15)
+      .attr("y", 20)
+      .attr("text-anchor", "middle")
+      .text("+")
+      .style("cursor", "pointer")
+      .on("click", () => {
+        svg.transition()
+          .duration(750)
+          .call(zoom.scaleBy, 1.3);
+      });
+
+    // Zoom out button
+    zoomControls.append("rect")
+      .attr("x", 40)
+      .attr("y", 0)
+      .attr("width", 30)
+      .attr("height", 30)
+      .attr("fill", "white")
+      .attr("stroke", "#999")
+      .attr("rx", 5)
+      .style("cursor", "pointer")
+      .on("click", () => {
+        svg.transition()
+          .duration(750)
+          .call(zoom.scaleBy, 0.7);
+      });
+
+    zoomControls.append("text")
+      .attr("x", 55)
+      .attr("y", 20)
+      .attr("text-anchor", "middle")
+      .text("-")
+      .style("cursor", "pointer")
+      .on("click", () => {
+        svg.transition()
+          .duration(750)
+          .call(zoom.scaleBy, 0.7);
+      });
   }, [courses, prerequisites, searchTerm, filters]);
 
   return (
