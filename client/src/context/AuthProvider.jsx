@@ -23,6 +23,15 @@ export const AuthProvider = ({children}) => {
         isAuthenticated: !!localStorage.getItem('userID')
     }));
 
+    // Add logout function
+    const logout = () => {
+        updateAuth({
+            UCID: null,
+            userType: null,
+            isAuthenticated: false
+        });
+    };
+
     // Wrapper function to update both state and localStorage
     const updateAuth = (newAuthData) => {
         setAuth(newAuthData);
@@ -36,7 +45,7 @@ export const AuthProvider = ({children}) => {
     };
 
     return (
-        <AuthContext.Provider value={{auth, setAuth: updateAuth}}>
+        <AuthContext.Provider value={{auth, setAuth: updateAuth, logout}}>
             {children}
         </AuthContext.Provider>
     )

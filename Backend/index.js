@@ -15,6 +15,19 @@ const db = mysql.createConnection({
   database: "coursedb",
 });
 
+app.get("/student/:StudentID", (req, res) => {
+  const { StudentID } = req.params;
+  const q = "SELECT * FROM student WHERE StudentID = ?";
+  
+  db.query(q, [StudentID], (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json(err);
+    }
+    return res.json(data);
+  });
+});
+
 app.get("/course", (req, res) => {
   const {
     showtaken,
