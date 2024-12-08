@@ -78,12 +78,6 @@ const Add = () => {
           onChange={handleChange}
           name="Department_Name"
         />
-        <input
-          type="text"
-          placeholder="Concentration_Name"
-          onChange={handleChange}
-          name="Concentration_Name"
-        />
         <button className="formButton" onClick={handleClick}>
           Add
         </button>

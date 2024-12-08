@@ -30,7 +30,7 @@ const CourseMap = () => {
     const fetchData = async () => {
       try {
         // Fetch filtered courses first
-        const coursesRes = await axios.get("http://localhost:8800/course", {
+        const coursesRes = await axios.get("http://localhost:8800/coursemap", {
           params: {
             ...filters,
             ucid: ucid,
