@@ -1,0 +1,25 @@
+.course-info {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.error-message {
+  color: red;
+  margin: 10px 0;
+}
+
+.remove-button,
+.back-button {
+  padding: 10px 20px;
+  margin: 100px 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.remove-button:hover,
+.back-button:hover {
+  cursor: pointer;
+  background-color: #d8d4d4;
+}
