@@ -48,7 +48,7 @@ const Course = () => {
 
       <h1> Course List </h1>
       <button className="add-course">
-        <Link to="/itpages/addcourse">Add new Course</Link>
+        <Link to="/itpages/addcourse">Add New Course</Link>
       </button>
       <div className="course-controls">
         <input
