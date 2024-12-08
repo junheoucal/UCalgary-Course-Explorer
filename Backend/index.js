@@ -11,7 +11,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "m*ziLE4GD9YiCUHtgk-j",
+  password: "junheo",
   database: "coursedb",
 });
 
@@ -153,24 +153,55 @@ app.post("/take_course/:CourseID", (req, res) => {
   const { CourseID } = req.params;
   const { UCID } = req.body;
 
-  console.log("Received request to add course:", { CourseID, UCID }); // Debug log
-
   if (!UCID) {
     console.log("No UCID provided");
     return res.status(400).json({ error: "UCID is required" });
   }
 
-  const q = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
+  // First check if all prerequisites are met
+  const checkPrerequisitesQuery = `
+    SELECT 
+      CASE 
+        WHEN NOT EXISTS (
+          SELECT p.Required_CourseID 
+          FROM prerequisite p 
+          WHERE p.CourseID = ? 
+          AND p.Required_CourseID NOT IN (
+            SELECT CourseID 
+            FROM taken_by 
+            WHERE StudentID = ?
+          )
+        ) THEN TRUE 
+        ELSE FALSE 
+      END as prerequisites_met
+  `;
 
-  db.query(q, [CourseID, UCID], (err, data) => {
+  db.query(checkPrerequisitesQuery, [CourseID, UCID], (err, prereqResult) => {
     if (err) {
-      console.error("Database error:", err);
+      console.error("Database error checking prerequisites:", err);
       return res.status(500).json({ error: err.message });
     }
-    console.log("Successfully added course to taken_by table");
-    return res.json({
-      success: true,
-      message: "Course has been added to My Courses",
+
+    if (!prereqResult[0].prerequisites_met) {
+      return res.status(400).json({ 
+        error: "Cannot add course - prerequisites not met",
+        type: "PREREQUISITES_NOT_MET"
+      });
+    }
+
+    // If prerequisites are met, proceed with adding the course
+    const insertQuery = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
+    
+    db.query(insertQuery, [CourseID, UCID], (err, data) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      console.log("Successfully added course to taken_by table");
+      return res.json({
+        success: true,
+        message: "Course has been added to My Courses",
+      });
     });
   });
 });
