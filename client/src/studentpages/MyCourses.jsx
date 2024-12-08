@@ -55,7 +55,7 @@ const MyCourses = () => {
       </div>
 
       <div className="courses-container">
-        <h1>Past Courses List</h1>
+        <h1>List of Courses Taken</h1>
         <div className="past-courses">
           {pastCourses.map((pastCourse) => (
             <div className="course-card" key={pastCourse.CourseID}>

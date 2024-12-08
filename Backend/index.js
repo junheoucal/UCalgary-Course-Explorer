@@ -11,7 +11,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "junheo",
+  password: "m*ziLE4GD9YiCUHtgk-j",
   database: "coursedb",
 });
 
@@ -53,7 +53,7 @@ app.get("/course", (req, res) => {
     WHERE c.CourseID IN (SELECT CourseID FROM PrereqChain)
   `;
 
-  const searchPattern = searchTerm ? `%${searchTerm}%` : '%';
+  const searchPattern = searchTerm ? `%${searchTerm}%` : "%";
   const params = [searchPattern, searchPattern, searchPattern, ucid];
   const conditions = [];
 
@@ -213,15 +213,16 @@ app.post("/take_course/:CourseID", (req, res) => {
 
     if (!prereqResults[0]?.prerequisites_met) {
       console.log("Prerequisites not met");
-      return res.status(400).json({ 
-        error: "Prerequisites not met", 
+      return res.status(400).json({
+        error: "Prerequisites not met",
         type: "PREREQUISITES_NOT_MET",
-        missing: prereqResults[0]?.missing_prerequisites?.split(',') || []
+        missing: prereqResults[0]?.missing_prerequisites?.split(",") || [],
       });
     }
 
     // If prerequisites are met, proceed with adding the course
-    const insertQuery = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
+    const insertQuery =
+      "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
     db.query(insertQuery, [CourseID, UCID], (err, data) => {
       if (err) {
         console.error("Database error:", err);
@@ -230,7 +231,7 @@ app.post("/take_course/:CourseID", (req, res) => {
       console.log("Successfully added course to taken_by table");
       return res.json({
         success: true,
-        message: "Course has been added to My Courses"
+        message: "Course has been added to My Courses",
       });
     });
   });
