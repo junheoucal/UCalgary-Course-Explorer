@@ -40,7 +40,6 @@ const Add = () => {
           className="ucalgary-logo"
         />
       </div>
-
       <div className="form">
         <h1> Add New Course</h1>
         <input

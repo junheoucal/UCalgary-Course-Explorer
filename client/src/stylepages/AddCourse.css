@@ -22,7 +22,7 @@
 
 .form input:focus {
   outline: none;
-  border-color: #e31837;
+  border-color: black;
   box-shadow: 0 0 5px rgba(227, 24, 55, 0.2);
 }
 

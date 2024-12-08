@@ -1,0 +1,78 @@
+.tutorial-container {
+  padding: 20px;
+  margin-bottom: 20px;
+  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 400px);
+  justify-content: center;
+}
+
+.tutorial {
+  border: 1px solid #ccc;
+}
+
+.tutorial h2 {
+  color: black;
+  margin-bottom: 15px;
+}
+
+.tutorial p {
+  color: #666;
+  margin: 8px 0;
+  font-size: 18px;
+  text-align: center;
+}
+
+.tutorial button {
+  background-color: #e31837;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.tutorial button:hover {
+  background-color: #b31329;
+}
+
+.tutorial button a {
+  color: white;
+  text-decoration: none;
+}
+
+button.delete {
+  background-color: #dc3545;
+}
+
+button.delete:hover {
+  background-color: #c82333;
+}
+
+button.update {
+  background-color: #007bff;
+}
+
+button.update:hover {
+  background-color: #0056b3;
+}
+
+/* Navigation buttons at the bottom */
+.ucalgary-container > button {
+  background-color: #ccc;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.ucalgary-container > button:hover {
+  background-color: #d8d8d8;
+}
+
+.ucalgary-container > button a {
+  color: black;
+  text-decoration: none;
+}
