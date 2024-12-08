@@ -3,11 +3,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import { useAuth } from "../context/AuthContext";
+import "../stylepages/CourseList.css";
 
 const Course = () => {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [department, setDepartment] = useState('ALL');
+  const [department, setDepartment] = useState("ALL");
 
   useEffect(() => {
     const fetchAllCourse = async () => {
@@ -15,8 +16,8 @@ const Course = () => {
         const res = await axios.get("http://localhost:8800/course", {
           params: {
             searchTerm: searchTerm,
-            department: department
-          }
+            department: department,
+          },
         });
         setCourses(res.data);
       } catch (err) {
@@ -36,9 +37,17 @@ const Course = () => {
   };
 
   return (
-    <div>
+    <div className="ucalgary-container">
+      <div className="header">
+        <img
+          src="/uofc-logo.png"
+          alt="University of Calgary Logo"
+          className="ucalgary-logo"
+        />
+      </div>
+
       <h1> Course List </h1>
-      <button>
+      <button className="add-course">
         <Link to="/itpages/addcourse">Add new Course</Link>
       </button>
       <div className="course-controls">
@@ -49,10 +58,10 @@ const Course = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        
+
         <div className="department-select">
-          <select 
-            name="department" 
+          <select
+            name="department"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
           >
@@ -62,12 +71,12 @@ const Course = () => {
           </select>
         </div>
       </div>
-      <div className="course">
+      <div className="course-container">
         {courses.map((course) => (
           <div className="course" key={course.CourseID}>
             <h2>{course.CourseID}</h2>
             <h3>{course.Course_Name}</h3>
-            <p>{course.Level}</p>
+            <p>{course.Level} level</p>
             <p>{course.Course_Description}</p>
             <p>{course.Credits}</p>
             <p>{course.Department_Name}</p>
@@ -90,10 +99,14 @@ const Course = () => {
               <Link to={`/itpages/Tutorial/${course.CourseID}`}>Tutorial</Link>
             </button>
             <button className="manageprerequisite">
-              <Link to={`/itpages/manageprerequisite/${course.CourseID}`}>Manage Prerequisites</Link>
+              <Link to={`/itpages/manageprerequisite/${course.CourseID}`}>
+                Manage Prerequisites
+              </Link>
             </button>
             <button className="manageantirequisite">
-              <Link to={`/itpages/manageantirequisite/${course.CourseID}`}>Manage Antirequisites</Link>
+              <Link to={`/itpages/manageantirequisite/${course.CourseID}`}>
+                Manage Antirequisites
+              </Link>
             </button>
           </div>
         ))}
