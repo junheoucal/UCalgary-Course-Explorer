@@ -185,17 +185,53 @@ app.post("/take_course/:CourseID", (req, res) => {
     return res.status(400).json({ error: "UCID is required" });
   }
 
-  const q = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
+  // First check if all prerequisites are met
+  const checkPrerequisitesQuery = `
+    SELECT 
+      CASE 
+        WHEN COUNT(p.Required_CourseID) = 0 THEN TRUE  -- No prerequisites
+        WHEN COUNT(p.Required_CourseID) = COUNT(t.CourseID) THEN TRUE  -- All prerequisites taken
+        ELSE FALSE  -- Missing prerequisites
+      END as prerequisites_met,
+      GROUP_CONCAT(
+        CASE 
+          WHEN t.CourseID IS NULL 
+          THEN p.Required_CourseID 
+        END
+      ) as missing_prerequisites
+    FROM course c
+    LEFT JOIN prerequisite p ON c.CourseID = p.CourseID
+    LEFT JOIN taken_by t ON p.Required_CourseID = t.CourseID AND t.StudentID = ?
+    WHERE c.CourseID = ?
+    GROUP BY c.CourseID`;
 
-  db.query(q, [CourseID, UCID], (err, data) => {
+  db.query(checkPrerequisitesQuery, [UCID, CourseID], (err, prereqResults) => {
     if (err) {
-      console.error("Database error:", err);
+      console.error("Error checking prerequisites:", err);
       return res.status(500).json({ error: err.message });
     }
-    console.log("Successfully added course to taken_by table");
-    return res.json({
-      success: true,
-      message: "Course has been added to My Courses",
+
+    if (!prereqResults[0]?.prerequisites_met) {
+      console.log("Prerequisites not met");
+      return res.status(400).json({ 
+        error: "Prerequisites not met", 
+        type: "PREREQUISITES_NOT_MET",
+        missing: prereqResults[0]?.missing_prerequisites?.split(',') || []
+      });
+    }
+
+    // If prerequisites are met, proceed with adding the course
+    const insertQuery = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
+    db.query(insertQuery, [CourseID, UCID], (err, data) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      console.log("Successfully added course to taken_by table");
+      return res.json({
+        success: true,
+        message: "Course has been added to My Courses"
+      });
     });
   });
 });
