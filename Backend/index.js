@@ -29,6 +29,75 @@ app.get("/student/:StudentID", (req, res) => {
 });
 
 app.get("/course", (req, res) => {
+  const { showtaken, showantirequisites, showtakable, ucid, department, showonlyrequirements, searchTerm } = req.query;
+  let q = `
+    SELECT c.*, 
+           CASE WHEN t.StudentID IS NOT NULL THEN TRUE ELSE FALSE END as is_taken
+    FROM course c
+    LEFT JOIN taken_by t ON c.CourseID = t.CourseID AND t.StudentID = ?
+  `;
+  const params = [ucid];
+  const conditions = [];
+
+  if (showtaken === 'false') {
+    conditions.push("c.CourseID NOT IN (SELECT CourseID FROM taken_by WHERE StudentID = ?)");
+    params.push(ucid);
+  }
+
+  if (showantirequisites === 'false') {
+    conditions.push("c.CourseID NOT IN (SELECT Conflicting_CourseID FROM antirequisite WHERE antirequisite.CourseID IN (SELECT CourseID FROM taken_by WHERE StudentID = ?))");
+    params.push(ucid);
+  }
+
+  if (showtakable === 'true') {
+    conditions.push(`NOT EXISTS (
+      SELECT Required_CourseID 
+      FROM prerequisite 
+      WHERE CourseID = c.CourseID 
+      AND Required_CourseID NOT IN (
+        SELECT CourseID 
+        FROM taken_by 
+        WHERE StudentID = ?
+      )
+    )`);
+    params.push(ucid);
+  }
+
+  if (showonlyrequirements === 'true') {
+    conditions.push("c.CourseID IN (SELECT CourseID FROM major_requirement WHERE Major IN (SELECT Major FROM take_major WHERE StudentID = ?) UNION SELECT CourseID FROM minor_requirement WHERE Minor IN (SELECT Minor FROM take_minor WHERE StudentID = ?))");
+    params.push(ucid, ucid);
+  }
+
+  if (department === 'CPSC') {
+    conditions.push("c.Department_Name = 'CPSC'");
+  } else if (department === 'MATH') {
+    conditions.push("c.Department_Name = 'MATH'");
+  }
+
+  // Add search condition if searchTerm is provided
+  if (searchTerm) {
+    conditions.push("(c.CourseID LIKE ? OR c.Course_Name LIKE ?)");
+    params.push(`%${searchTerm}%`, `%${searchTerm}%`);
+  }
+
+  // Add WHERE clause only if there are conditions
+  if (conditions.length > 0) {
+    q += " WHERE " + conditions.join(" AND ");
+  }
+
+  console.log('Query:', q); // Debug log
+  console.log('Params:', params); // Debug log
+
+  db.query(q, params, (err, data) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json(err);
+    }
+    return res.json(data);
+  });
+});
+
+app.get("/coursemap", (req, res) => {
   const {
     showtaken,
     showantirequisites,
