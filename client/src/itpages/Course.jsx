@@ -38,6 +38,9 @@ const Course = () => {
   return (
     <div>
       <h1> Course List </h1>
+      <button>
+        <Link to="/itpages/addcourse">Add new Course</Link>
+      </button>
       <div className="course-controls">
         <input
           className="search-input"
@@ -95,9 +98,6 @@ const Course = () => {
           </div>
         ))}
       </div>
-      <button>
-        <Link to="/itpages/add">Add new Course</Link>
-      </button>
     </div>
   );
 };

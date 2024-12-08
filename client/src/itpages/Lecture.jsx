@@ -54,7 +54,7 @@ const Lecture = () => {
                 <Link to={`/itpages/AddLecture/${CourseID}`}>Add new Lecture</Link>
             </button>
             <button>
-                <Link to="/">Go Back To Course List</Link>
+                <Link to={`/itpages/course`}>Go Back To Course List</Link>
             </button>
         </div>
     );    

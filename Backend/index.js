@@ -689,11 +689,11 @@ app.delete("/antirequisite/:CourseID/:Conflicting_CourseID", (req, res) => {
 });
 
 // Delete a lecture
-app.delete("/lecture/:lectureId", (req, res) => {
-  const { lectureId } = req.params;
+app.delete("/lecture/:CourseID/:LectureID", (req, res) => {
+  const { CourseID, LectureID } = req.params;
 
-  const q = "DELETE FROM lecture WHERE LectureID = ?";
-  db.query(q, [lectureId], (err, data) => {
+  const q = "DELETE FROM lecture WHERE CourseID = ? AND LectureID = ?";
+  db.query(q, [CourseID, LectureID], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json("Lecture has been deleted");
   });
