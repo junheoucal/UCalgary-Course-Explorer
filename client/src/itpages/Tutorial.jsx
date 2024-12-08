@@ -87,10 +87,10 @@ const Tutorial = () => {
           ))}
         </div>
         <button>
-          <Link to={`/itpages/AddTutorial/${CourseID}`}>Add new Tutorial</Link>
+          <Link to={`/itpages/AddTutorial/${CourseID}`}>Add New Tutorial</Link>
         </button>
         <button>
-          <Link to="/itpages/Course">Go Back To Course List</Link>
+          <Link to="/itpages/Course">Back To Course List</Link>
         </button>
       </div>
     )

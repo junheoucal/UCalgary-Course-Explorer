@@ -71,63 +71,63 @@ const UpdateLecture = () => {
         <h1>Update Lecture</h1>
         <input
           type="text"
-          placeholder="lecture ID"
+          placeholder="Lecture ID"
           value={lecture.LectureID}
           name="LectureID"
           disabled
         />
         <input
           type="number"
-          placeholder="enrollment limit"
+          placeholder="Enrollment Limit"
           value={lecture.Enrollment_Limit}
           onChange={handleChange}
           name="Enrollment_Limit"
         />
         <input
           type="number"
-          placeholder="enrollment current number"
+          placeholder="Enrollment Current Number"
           value={lecture.Enrollment_Current_Number}
           onChange={handleChange}
           name="Enrollment_Current_Number"
         />
         <input
           type="text"
-          placeholder="building name"
+          placeholder="Building Name"
           value={lecture.Building_Name}
           onChange={handleChange}
           name="Building_Name"
         />
         <input
           type="text"
-          placeholder="room location"
+          placeholder="Room Location"
           value={lecture.Room_Location}
           onChange={handleChange}
           name="Room_Location"
         />
         <input
           type="text"
-          placeholder="semester name"
+          placeholder="Semester Name"
           value={lecture.Semester_Name}
           onChange={handleChange}
           name="Semester_Name"
         />
         <input
           type="text"
-          placeholder="days"
+          placeholder="Days"
           value={lecture.Days}
           onChange={handleChange}
           name="Days"
         />
         <input
           type="time"
-          placeholder="start time"
+          placeholder="Start Time"
           value={lecture.Start_time}
           onChange={handleChange}
           name="Start_time"
         />
         <input
           type="time"
-          placeholder="end time"
+          placeholder="End Time"
           value={lecture.End_time}
           onChange={handleChange}
           name="End_time"

@@ -53,55 +53,55 @@ const AddLecture = () => {
         <h1>Add Lecture</h1>
         <input
           type="text"
-          placeholder="lecture ID"
+          placeholder="Lecture ID"
           onChange={handleChange}
           name="LectureID"
         />
         <input
           type="number"
-          placeholder="enrollment limit"
+          placeholder="Enrollment Limit"
           onChange={handleChange}
           name="Enrollment_Limit"
         />
         <input
           type="number"
-          placeholder="enrollment current number"
+          placeholder="Enrollment Current Number"
           onChange={handleChange}
           name="Enrollment_Current_Number"
         />
         <input
           type="text"
-          placeholder="building name"
+          placeholder="Building Name"
           onChange={handleChange}
           name="Building_Name"
         />
         <input
           type="text"
-          placeholder="room location"
+          placeholder="Room Location"
           onChange={handleChange}
           name="Room_Location"
         />
         <input
           type="text"
-          placeholder="semester name"
+          placeholder="Semester Name"
           onChange={handleChange}
           name="Semester_Name"
         />
         <input
           type="text"
-          placeholder="days"
+          placeholder="Days"
           onChange={handleChange}
           name="Days"
         />
         <input
           type="time"
-          placeholder="start time"
+          placeholder="Start Time"
           onChange={handleChange}
           name="Start_time"
         />
         <input
           type="time"
-          placeholder="end time"
+          placeholder="End Time"
           onChange={handleChange}
           name="End_time"
         />
