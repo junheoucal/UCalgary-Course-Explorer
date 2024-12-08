@@ -23,6 +23,7 @@ app.get("/course", (req, res) => {
     ucid,
     department,
     showonlyrequirements,
+    searchTerm
   } = req.query;
   let q = `
     SELECT c.*, 
@@ -32,6 +33,13 @@ app.get("/course", (req, res) => {
   `;
   const params = [ucid];
   const conditions = [];
+
+  if (searchTerm) {
+    conditions.push(
+      "(c.CourseID LIKE ? OR c.Course_Name LIKE ?)"
+    );
+    params.push(`%${searchTerm}%`, `%${searchTerm}%`);
+  }
 
   if (showtaken === "false") {
     conditions.push(

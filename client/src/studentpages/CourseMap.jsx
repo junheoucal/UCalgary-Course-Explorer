@@ -28,32 +28,51 @@ const CourseMap = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch filtered courses first
         const coursesRes = await axios.get("http://localhost:8800/course", {
           params: {
             ...filters,
             ucid: ucid,
+            searchTerm: searchTerm,
           },
         });
         setCourse(coursesRes.data);
 
-        // Fetch prerequisites for all courses
+        // Create a Set of visible course IDs for efficient lookup
+        const visibleCourseIds = new Set(coursesRes.data.map(course => course.CourseID));
+
+        // Fetch prerequisites only for visible courses
         const prereqPromises = coursesRes.data.map((course) =>
           axios.get(`http://localhost:8800/prerequisite/${course.CourseID}`)
         );
         const prereqResults = await Promise.all(prereqPromises);
+        
+        // Filter prerequisites to only include relations between visible courses
         const allPrereqs = prereqResults.flatMap((res, idx) =>
-          res.data.map((prereq) => ({
-            source: prereq.Required_CourseID,
-            target: coursesRes.data[idx].CourseID,
-          }))
+          res.data
+            .filter(prereq => 
+              visibleCourseIds.has(prereq.Required_CourseID) && 
+              visibleCourseIds.has(coursesRes.data[idx].CourseID)
+            )
+            .map((prereq) => ({
+              source: prereq.Required_CourseID,
+              target: coursesRes.data[idx].CourseID,
+            }))
         );
-        setPrerequisites(allPrereqs);
+
+        // Additional validation to ensure all nodes exist
+        const validPrereqs = allPrereqs.filter(prereq => 
+          coursesRes.data.some(course => course.CourseID === prereq.source) &&
+          coursesRes.data.some(course => course.CourseID === prereq.target)
+        );
+        
+        setPrerequisites(validPrereqs);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, [filters, ucid]);
+  }, [filters, ucid, searchTerm]);
 
   // D3 visualization
   useEffect(() => {
@@ -62,22 +81,15 @@ const CourseMap = () => {
     // Clear previous visualization
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const filteredCourses = courses.filter(
-      (course) =>
-        course.CourseID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.Course_Name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const filteredCourseIds = new Set(filteredCourses.map((c) => c.CourseID));
-    const filteredPrerequisites = prerequisites.filter(
-      (prereq) =>
-        filteredCourseIds.has(prereq.source) &&
-        filteredCourseIds.has(prereq.target)
+    // Additional validation before creating the simulation
+    const validPrerequisites = prerequisites.filter(prereq => 
+      courses.some(course => course.CourseID === prereq.source) &&
+      courses.some(course => course.CourseID === prereq.target)
     );
 
     const width = 1000;
     const height = 600;
 
-    // Create the SVG container
     const svg = d3
       .select(svgRef.current)
       .attr("width", width)
@@ -95,9 +107,9 @@ const CourseMap = () => {
     const container = svg.append("g")
       .attr("class", "zoom-container");
 
-    // Add force simulation
-    const simulation = d3.forceSimulation(filteredCourses)
-      .force("link", d3.forceLink(filteredPrerequisites)
+    // Use validated prerequisites in the simulation
+    const simulation = d3.forceSimulation(courses)
+      .force("link", d3.forceLink(validPrerequisites)
         .id(d => d.CourseID)
         .distance(150))
       .force("charge", d3.forceManyBody().strength(-500))
@@ -152,7 +164,7 @@ const CourseMap = () => {
     // Draw links with adjusted endpoints
     const links = container.append("g")
       .selectAll("line")
-      .data(filteredPrerequisites)
+      .data(validPrerequisites)
       .enter()
       .append("line")
       .attr("stroke", "#999")
@@ -163,7 +175,7 @@ const CourseMap = () => {
     // Create nodes (courses)
     const nodes = container.append("g")
       .selectAll("g")
-      .data(filteredCourses)
+      .data(courses)
       .enter()
       .append("g")
       .call(
@@ -317,7 +329,7 @@ const CourseMap = () => {
           .duration(750)
           .call(zoom.scaleBy, 0.7);
       });
-  }, [courses, prerequisites, searchTerm, filters]);
+  }, [courses, prerequisites]);
 
   return (
     <div className="ucalgary-container">
