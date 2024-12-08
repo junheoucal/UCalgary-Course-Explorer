@@ -23,24 +23,41 @@ app.get("/course", (req, res) => {
     ucid,
     department,
     showonlyrequirements,
-    searchTerm
+    searchTerm,
   } = req.query;
+
+  // First, create a CTE (Common Table Expression) to recursively find prerequisites
   let q = `
-    SELECT c.*, 
-           CASE WHEN t.StudentID IS NOT NULL THEN TRUE ELSE FALSE END as is_taken
+    WITH RECURSIVE PrereqChain AS (
+      -- Base case: courses matching the search term
+      SELECT c.CourseID
+      FROM course c
+      WHERE c.CourseID LIKE ? OR c.Course_Name LIKE ? OR c.Course_Description LIKE ?
+      
+      UNION
+      
+      -- Recursive case: prerequisites of matching courses
+      SELECT p.Required_CourseID
+      FROM prerequisite p
+      INNER JOIN PrereqChain pc ON p.CourseID = pc.CourseID
+    )
+    SELECT DISTINCT c.*, 
+           CASE WHEN t.StudentID IS NOT NULL THEN TRUE ELSE FALSE END as is_taken,
+           NOT EXISTS (
+             SELECT 1 
+             FROM prerequisite p 
+             WHERE p.CourseID = c.CourseID
+           ) as has_no_prerequisites
     FROM course c
     LEFT JOIN taken_by t ON c.CourseID = t.CourseID AND t.StudentID = ?
+    WHERE c.CourseID IN (SELECT CourseID FROM PrereqChain)
   `;
-  const params = [ucid];
+
+  const searchPattern = searchTerm ? `%${searchTerm}%` : '%';
+  const params = [searchPattern, searchPattern, searchPattern, ucid];
   const conditions = [];
 
-  if (searchTerm) {
-    conditions.push(
-      "(c.CourseID LIKE ? OR c.Course_Name LIKE ?)"
-    );
-    params.push(`%${searchTerm}%`, `%${searchTerm}%`);
-  }
-
+  // Add additional filter conditions
   if (showtaken === "false") {
     conditions.push(
       "c.CourseID NOT IN (SELECT CourseID FROM taken_by WHERE StudentID = ?)"
@@ -82,9 +99,9 @@ app.get("/course", (req, res) => {
     conditions.push("c.Department_Name = 'MATH'");
   }
 
-  // Add WHERE clause only if there are conditions
+  // Add WHERE clause conditions if they exist
   if (conditions.length > 0) {
-    q += " WHERE " + conditions.join(" AND ");
+    q += " AND " + conditions.join(" AND ");
   }
 
   console.log("Query:", q); // Debug log
@@ -161,55 +178,24 @@ app.post("/take_course/:CourseID", (req, res) => {
   const { CourseID } = req.params;
   const { UCID } = req.body;
 
+  console.log("Received request to add course:", { CourseID, UCID }); // Debug log
+
   if (!UCID) {
     console.log("No UCID provided");
     return res.status(400).json({ error: "UCID is required" });
   }
 
-  // First check if all prerequisites are met
-  const checkPrerequisitesQuery = `
-    SELECT 
-      CASE 
-        WHEN NOT EXISTS (
-          SELECT p.Required_CourseID 
-          FROM prerequisite p 
-          WHERE p.CourseID = ? 
-          AND p.Required_CourseID NOT IN (
-            SELECT CourseID 
-            FROM taken_by 
-            WHERE StudentID = ?
-          )
-        ) THEN TRUE 
-        ELSE FALSE 
-      END as prerequisites_met
-  `;
+  const q = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
 
-  db.query(checkPrerequisitesQuery, [CourseID, UCID], (err, prereqResult) => {
+  db.query(q, [CourseID, UCID], (err, data) => {
     if (err) {
-      console.error("Database error checking prerequisites:", err);
+      console.error("Database error:", err);
       return res.status(500).json({ error: err.message });
     }
-
-    if (!prereqResult[0].prerequisites_met) {
-      return res.status(400).json({ 
-        error: "Cannot add course - prerequisites not met",
-        type: "PREREQUISITES_NOT_MET"
-      });
-    }
-
-    // If prerequisites are met, proceed with adding the course
-    const insertQuery = "INSERT INTO taken_by (CourseID, StudentID) VALUES (?, ?)";
-    
-    db.query(insertQuery, [CourseID, UCID], (err, data) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ error: err.message });
-      }
-      console.log("Successfully added course to taken_by table");
-      return res.json({
-        success: true,
-        message: "Course has been added to My Courses",
-      });
+    console.log("Successfully added course to taken_by table");
+    return res.json({
+      success: true,
+      message: "Course has been added to My Courses",
     });
   });
 });

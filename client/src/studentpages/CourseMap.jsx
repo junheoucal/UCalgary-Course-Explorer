@@ -8,6 +8,7 @@ import "../stylepages/CourseMap.css";
 // Add constants at the top of the file
 const ARROW_OFFSET = 9;  // Distance from node center to arrow tip
 const CIRCLE_RADIUS = 30; // Radius of course nodes
+const STROKE_WIDTH = 4;  // Width of the highlight stroke
 
 const CourseMap = () => {
   const { auth } = useAuth();
@@ -81,15 +82,18 @@ const CourseMap = () => {
     // Clear previous visualization
     d3.select(svgRef.current).selectAll("*").remove();
 
-    // Additional validation before creating the simulation
+    // Create a map of course IDs for quick lookup
+    const courseMap = new Map(courses.map(course => [course.CourseID, course]));
+
+    // Filter prerequisites to only include valid links
     const validPrerequisites = prerequisites.filter(prereq => 
-      courses.some(course => course.CourseID === prereq.source) &&
-      courses.some(course => course.CourseID === prereq.target)
+      courseMap.has(prereq.source) && courseMap.has(prereq.target)
     );
 
     const width = 1000;
     const height = 600;
 
+    // Create SVG and container elements
     const svg = d3
       .select(svgRef.current)
       .attr("width", width)
@@ -107,16 +111,62 @@ const CourseMap = () => {
     const container = svg.append("g")
       .attr("class", "zoom-container");
 
-    // Use validated prerequisites in the simulation
+    // Create a layered layout based on prerequisites
+    const layers = new Map();
+    const visited = new Set();
+
+    // Helper function to determine node layer
+    function assignLayer(courseId, layer = 0) {
+      if (visited.has(courseId)) return;
+      visited.add(courseId);
+      
+      layers.set(courseId, Math.max(layer, layers.get(courseId) || 0));
+      
+      // Find all courses that require this as a prerequisite
+      prerequisites
+        .filter(p => p.source === courseId)
+        .forEach(p => assignLayer(p.target, layer + 1));
+    }
+
+    // Assign initial layers
+    courses.forEach(course => {
+      if (!visited.has(course.CourseID)) {
+        assignLayer(course.CourseID);
+      }
+    });
+
+    // Modify simulation forces
     const simulation = d3.forceSimulation(courses)
       .force("link", d3.forceLink(validPrerequisites)
         .id(d => d.CourseID)
         .distance(150))
-      .force("charge", d3.forceManyBody().strength(-500))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("x", d3.forceX(width / 2).strength(0.1))
-      .force("y", d3.forceY(height / 2).strength(0.1))
-      .force("collision", d3.forceCollide().radius(60));
+      .force("charge", d3.forceManyBody().strength(-1000))
+      .force("x", d3.forceX().strength(0.2).x(d => {
+        const layer = layers.get(d.CourseID) || 0;
+        if (d.has_no_prerequisites) {
+          return width / 2;
+        }
+        return (layer * width / 5) + 100;
+      }))
+      .force("y", d3.forceY().strength(0.1).y(d => {
+        if (d.has_no_prerequisites) {
+          return height / 2;
+        }
+        return height / 2 + (Math.random() - 0.5) * height / 4;
+      }))
+      .force("collision", d3.forceCollide().radius(70));
+
+    // Set initial positions based on layers
+    courses.forEach(course => {
+      const layer = layers.get(course.CourseID) || 0;
+      if (course.has_no_prerequisites) {
+        course.x = width / 2;
+        course.y = height / 2;
+      } else {
+        course.x = (layer * width / 5) + 100;
+        course.y = height / 2 + (Math.random() - 0.5) * height / 4;
+      }
+    });
 
     // Reset zoom button
     svg.append("rect")
@@ -194,7 +244,9 @@ const CourseMap = () => {
         if (d.Department_Name === "MATH") return "#ea4335";
         return "#fbbc05";
       })
-      .attr("opacity", (d) => (d.is_taken ? 0.5 : 1)); // Add opacity based on taken status
+      .attr("opacity", (d) => (d.is_taken ? 0.5 : 1))
+      .attr("stroke", d => d.has_no_prerequisites ? "#32CD32" : "none")
+      .attr("stroke-width", d => d.has_no_prerequisites ? STROKE_WIDTH : 0);
 
     // Add course IDs as text
     nodes
@@ -208,11 +260,10 @@ const CourseMap = () => {
     // Add tooltips with additional information
     nodes
       .append("title")
-      .text(
-        (d) =>
-          `${d.CourseID}\n${d.Course_Name}\n${
-            d.is_taken ? "Taken" : "Not taken"
-          }`
+      .text((d) =>
+        `${d.CourseID}\n${d.Course_Name}\n${
+          d.is_taken ? "Taken" : "Not taken"
+        }\n${d.has_no_prerequisites ? "No prerequisites required" : "Has prerequisites"}`
       );
 
     // Add click handler
