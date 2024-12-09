@@ -189,12 +189,14 @@ const AddAntirequisite = () => {
               <button
                 onClick={() => handleAddAntirequisite(course.CourseID)}
                 style={{
-                  padding: "10px 20px",
+                  padding: "8px 10px",
                   backgroundColor: "#007bff",
                   color: "white",
                   border: "none",
                   borderRadius: "4px",
                   cursor: "pointer",
+                  fontSize: "14px",
+                  minWidth: "150px"
                 }}
               >
                 Add as Antirequisite
