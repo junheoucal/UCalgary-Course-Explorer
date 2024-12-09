@@ -11,7 +11,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "m*ziLE4GD9YiCUHtgk-j",
+  password: "junheo",
   database: "coursedb",
 });
 
@@ -964,14 +964,25 @@ app.post("/studentpages/addmajor/:StudentID", (req, res) => {
   const { Major } = req.body;
   const { StudentID } = req.params;
 
-  const q = `
-    INSERT INTO take_major 
-    (StudentID, Major)
-    VALUES (?, ?)`;
+  // First check if student already has this major
+  const checkQuery = "SELECT * FROM take_major WHERE StudentID = ? AND Major = ?";
+  db.query(checkQuery, [StudentID, Major], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error" });
+    }
 
-  db.query(q, [StudentID, Major], (err, data) => {
-    if (err) return res.status(500).json(err);
-    return res.status(201).json("Major has been created for Student");
+    if (results.length > 0) {
+      return res.status(409).json({ error: "You are already enrolled in this major" });
+    }
+
+    // If no duplicate, proceed with insertion
+    const insertQuery = "INSERT INTO take_major (StudentID, Major) VALUES (?, ?)";
+    db.query(insertQuery, [StudentID, Major], (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to add major" });
+      }
+      return res.status(201).json("Major has been created for Student");
+    });
   });
 });
 
@@ -980,14 +991,25 @@ app.post("/studentpages/addminor/:StudentID", (req, res) => {
   const { Minor } = req.body;
   const { StudentID } = req.params;
 
-  const q = `
-    INSERT INTO take_minor 
-    (StudentID, Minor)
-    VALUES (?, ?)`;
+  // First check if student already has this minor
+  const checkQuery = "SELECT * FROM take_minor WHERE StudentID = ? AND Minor = ?";
+  db.query(checkQuery, [StudentID, Minor], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error" });
+    }
 
-  db.query(q, [StudentID, Minor], (err, data) => {
-    if (err) return res.status(500).json(err);
-    return res.status(201).json("Minor has been created for Student");
+    if (results.length > 0) {
+      return res.status(409).json({ error: "You are already enrolled in this minor" });
+    }
+
+    // If no duplicate, proceed with insertion
+    const insertQuery = "INSERT INTO take_minor (StudentID, Minor) VALUES (?, ?)";
+    db.query(insertQuery, [StudentID, Minor], (err, data) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to add minor" });
+      }
+      return res.status(201).json("Minor has been created for Student");
+    });
   });
 });
 

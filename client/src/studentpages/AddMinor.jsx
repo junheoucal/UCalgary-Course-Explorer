@@ -9,8 +9,9 @@ const AddMinor = () => {
   const { auth } = useAuth();
   const [addMinor, setAddMinors] = useState({
     StudentID: auth.UCID,
-    Major: "",
+    Minor: "",
   });
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -21,12 +22,18 @@ const AddMinor = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     try {
+      setError("");
       await axios.post(
         `http://localhost:8800/studentpages/addminor/${auth.UCID}`,
         addMinor
       );
       navigate("/studentpages/Minor");
     } catch (err) {
+      if (err.response && err.response.status === 409) {
+        setError("You are already enrolled in this minor");
+      } else {
+        setError("An error occurred while adding the minor");
+      }
       console.log(err);
     }
   };
@@ -49,6 +56,7 @@ const AddMinor = () => {
             <option value="Computer Science">Computer Science</option>
             <option value="Mathematics">Mathematics</option>
           </select>
+          {error && <div className="error-message" style={{color: 'red', marginTop: '10px'}}>{error}</div>}
           <div className="button-group">
             <button onClick={handleClick} className="add-button">
               Add
