@@ -57,7 +57,7 @@ const CoursePage = () => {
     if (!acc[section.Semester_Name]) {
       acc[section.Semester_Name] = { lectures: [], tutorials: [] };
     }
-    if (section.type === 'Lecture') {
+    if (section.type === "Lecture") {
       acc[section.Semester_Name].lectures.push(section);
     } else {
       acc[section.Semester_Name].tutorials.push(section);
@@ -155,47 +155,59 @@ const CoursePage = () => {
           </div>
         ))}
 
-        {Object.entries(groupedSections).map(([semester, { lectures, tutorials }]) => (
-          <div key={semester} className="semester-section">
-            <h3>{semester}</h3>
-            
-            {lectures.length > 0 && (
-              <div className="section-group">
-                <h4>Lectures</h4>
-                <ul>
-                  {lectures.map((lecture) => (
-                    <li key={`${lecture.type}-${lecture.SectionID}`}>
-                      Section {lecture.SectionID}: {lecture.Days} {lecture.Start_time}-{lecture.End_time}
-                      <br />
-                      Location: {lecture.Building_Name} {lecture.Room_Location}
-                      <br />
-                      Enrollment: {lecture.Enrollment_Current_Number}/{lecture.Enrollment_Limit}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+        {Object.entries(groupedSections).map(
+          ([semester, { lectures, tutorials }]) => (
+            <div key={semester} className="semester-section">
+              <h3>{semester}</h3>
 
-            {tutorials.length > 0 && (
-              <div className="section-group">
-                <h4>Tutorials</h4>
-                <ul>
-                  {tutorials.map((tutorial) => (
-                    <li key={`${tutorial.type}-${tutorial.SectionID}`}>
-                      Tutorial {tutorial.SectionID}: {tutorial.Days} {tutorial.Start_time}-{tutorial.End_time}
-                      <br />
-                      Location: {tutorial.Building_Name} {tutorial.Room_Location}
-                      <br />
-                      Enrollment: {tutorial.Enrollment_Current_Number}/{tutorial.Enrollment_Limit}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
+              {lectures.length > 0 && (
+                <div className="section-group">
+                  <h4>Lectures</h4>
+                  <ul>
+                    {lectures.map((lecture) => (
+                      <li key={`${lecture.type}-${lecture.SectionID}`}>
+                        Section {lecture.SectionID}: {lecture.Days}{" "}
+                        {lecture.Start_time}-{lecture.End_time}
+                        <br />
+                        Location: {lecture.Building_Name}{" "}
+                        {lecture.Room_Location}
+                        <br />
+                        Enrollment: {lecture.Enrollment_Current_Number}/
+                        {lecture.Enrollment_Limit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {tutorials.length > 0 && (
+                <div className="section-group">
+                  <h4>Tutorials</h4>
+                  <ul>
+                    {tutorials.map((tutorial) => (
+                      <li key={`${tutorial.type}-${tutorial.SectionID}`}>
+                        Tutorial {tutorial.SectionID}: {tutorial.Days}{" "}
+                        {tutorial.Start_time}-{tutorial.End_time}
+                        <br />
+                        Location: {tutorial.Building_Name}{" "}
+                        {tutorial.Room_Location}
+                        <br />
+                        Enrollment: {tutorial.Enrollment_Current_Number}/
+                        {tutorial.Enrollment_Limit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )
+        )}
 
         {error && <div className="error-message">{error}</div>}
+
+        <button className="back-button">
+          <Link to="/studentpages/MyCourses">Go to Taken Courses</Link>
+        </button>
 
         {isTaken ? (
           <button onClick={handleRemove} className="remove-button">
@@ -208,7 +220,7 @@ const CoursePage = () => {
         )}
 
         <button className="back-button">
-          <Link to="/studentpages/CourseSearch">Back to Course Search</Link>
+          <Link to="/studentpages/CourseSearch">Go to Course Search</Link>
         </button>
       </div>
     </div>
