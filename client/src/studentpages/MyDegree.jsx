@@ -11,6 +11,9 @@ const MyDegree = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/studentpages/home">Back</Link>
+        </button>
       </div>
       <div className="student-home">
         <h1>My Degree</h1>
@@ -19,9 +22,6 @@ const MyDegree = () => {
         </button>
         <button className="student-button">
           <Link to="/studentpages/Minor">View My Minor</Link>
-        </button>
-        <button>
-          <Link to="/studentpages/home">Back</Link>
         </button>
       </div>
     </div>

@@ -50,6 +50,9 @@ const CourseSearch = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/studentpages/home">Back</Link>
+        </button>
       </div>
 
       <div className="course-search-container">
@@ -141,11 +144,7 @@ const CourseSearch = () => {
             <h3>{course.Course_Name}</h3>
           </div>
         ))}
-        <div className="button-group">
-          <button>
-            <Link to="/studentpages/home">Back</Link>
-          </button>
-        </div>
+        <div className="button-group"></div>
       </div>
     </div>
   );

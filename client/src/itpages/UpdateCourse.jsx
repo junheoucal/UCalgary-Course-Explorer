@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Update = () => {
   const [course, setCourse] = useState({
@@ -21,7 +22,9 @@ const Update = () => {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8800/course/${courseID}`);
+        const response = await axios.get(
+          `http://localhost:8800/course/${courseID}`
+        );
         const data = response.data;
         if (data && data.length > 0) {
           setCourse(data[0]);
@@ -57,6 +60,9 @@ const Update = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/itpages/course">Back</Link>
+        </button>
       </div>
 
       <div className="form">
