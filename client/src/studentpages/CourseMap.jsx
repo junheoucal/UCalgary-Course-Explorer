@@ -6,9 +6,9 @@ import * as d3 from "d3";
 import "../stylepages/CourseMap.css";
 
 // Add constants at the top of the file
-const ARROW_OFFSET = 9;  // Distance from node center to arrow tip
+const ARROW_OFFSET = 9; // Distance from node center to arrow tip
 const CIRCLE_RADIUS = 30; // Radius of course nodes
-const STROKE_WIDTH = 4;  // Width of the highlight stroke
+const STROKE_WIDTH = 4; // Width of the highlight stroke
 
 const CourseMap = () => {
   const { auth } = useAuth();
@@ -40,20 +40,23 @@ const CourseMap = () => {
         setCourse(coursesRes.data);
 
         // Create a Set of visible course IDs for efficient lookup
-        const visibleCourseIds = new Set(coursesRes.data.map(course => course.CourseID));
+        const visibleCourseIds = new Set(
+          coursesRes.data.map((course) => course.CourseID)
+        );
 
         // Fetch prerequisites only for visible courses
         const prereqPromises = coursesRes.data.map((course) =>
           axios.get(`http://localhost:8800/prerequisite/${course.CourseID}`)
         );
         const prereqResults = await Promise.all(prereqPromises);
-        
+
         // Filter prerequisites to only include relations between visible courses
         const allPrereqs = prereqResults.flatMap((res, idx) =>
           res.data
-            .filter(prereq => 
-              visibleCourseIds.has(prereq.Required_CourseID) && 
-              visibleCourseIds.has(coursesRes.data[idx].CourseID)
+            .filter(
+              (prereq) =>
+                visibleCourseIds.has(prereq.Required_CourseID) &&
+                visibleCourseIds.has(coursesRes.data[idx].CourseID)
             )
             .map((prereq) => ({
               source: prereq.Required_CourseID,
@@ -62,11 +65,14 @@ const CourseMap = () => {
         );
 
         // Additional validation to ensure all nodes exist
-        const validPrereqs = allPrereqs.filter(prereq => 
-          coursesRes.data.some(course => course.CourseID === prereq.source) &&
-          coursesRes.data.some(course => course.CourseID === prereq.target)
+        const validPrereqs = allPrereqs.filter(
+          (prereq) =>
+            coursesRes.data.some(
+              (course) => course.CourseID === prereq.source
+            ) &&
+            coursesRes.data.some((course) => course.CourseID === prereq.target)
         );
-        
+
         setPrerequisites(validPrereqs);
       } catch (err) {
         console.log(err);
@@ -83,11 +89,13 @@ const CourseMap = () => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     // Create a map of course IDs for quick lookup
-    const courseMap = new Map(courses.map(course => [course.CourseID, course]));
+    const courseMap = new Map(
+      courses.map((course) => [course.CourseID, course])
+    );
 
     // Filter prerequisites to only include valid links
-    const validPrerequisites = prerequisites.filter(prereq => 
-      courseMap.has(prereq.source) && courseMap.has(prereq.target)
+    const validPrerequisites = prerequisites.filter(
+      (prereq) => courseMap.has(prereq.source) && courseMap.has(prereq.target)
     );
 
     const width = 1000;
@@ -100,7 +108,8 @@ const CourseMap = () => {
       .attr("height", height);
 
     // Add zoom behavior
-    const zoom = d3.zoom()
+    const zoom = d3
+      .zoom()
       .scaleExtent([0.1, 4])
       .on("zoom", (event) => {
         container.attr("transform", event.transform);
@@ -108,8 +117,7 @@ const CourseMap = () => {
 
     svg.call(zoom);
 
-    const container = svg.append("g")
-      .attr("class", "zoom-container");
+    const container = svg.append("g").attr("class", "zoom-container");
 
     // Create a layered layout based on prerequisites
     const layers = new Map();
@@ -119,57 +127,75 @@ const CourseMap = () => {
     function assignLayer(courseId, layer = 0) {
       if (visited.has(courseId)) return;
       visited.add(courseId);
-      
+
       layers.set(courseId, Math.max(layer, layers.get(courseId) || 0));
-      
+
       // Find all courses that require this as a prerequisite
       prerequisites
-        .filter(p => p.source === courseId)
-        .forEach(p => assignLayer(p.target, layer + 1));
+        .filter((p) => p.source === courseId)
+        .forEach((p) => assignLayer(p.target, layer + 1));
     }
 
     // Assign initial layers
-    courses.forEach(course => {
+    courses.forEach((course) => {
       if (!visited.has(course.CourseID)) {
         assignLayer(course.CourseID);
       }
     });
 
     // Modify simulation forces
-    const simulation = d3.forceSimulation(courses)
-      .force("link", d3.forceLink(validPrerequisites)
-        .id(d => d.CourseID)
-        .distance(150))
+    const simulation = d3
+      .forceSimulation(courses)
+      .force(
+        "link",
+        d3
+          .forceLink(validPrerequisites)
+          .id((d) => d.CourseID)
+          .distance(150)
+      )
       .force("charge", d3.forceManyBody().strength(-1000))
-      .force("x", d3.forceX().strength(0.2).x(d => {
-        const layer = layers.get(d.CourseID) || 0;
-        if (d.has_no_prerequisites) {
-          return width / 2;
-        }
-        return (layer * width / 5) + 100;
-      }))
-      .force("y", d3.forceY().strength(0.1).y(d => {
-        if (d.has_no_prerequisites) {
-          return height / 2;
-        }
-        return height / 2 + (Math.random() - 0.5) * height / 4;
-      }))
+      .force(
+        "x",
+        d3
+          .forceX()
+          .strength(0.2)
+          .x((d) => {
+            const layer = layers.get(d.CourseID) || 0;
+            if (d.has_no_prerequisites) {
+              return width / 2;
+            }
+            return (layer * width) / 5 + 100;
+          })
+      )
+      .force(
+        "y",
+        d3
+          .forceY()
+          .strength(0.1)
+          .y((d) => {
+            if (d.has_no_prerequisites) {
+              return height / 2;
+            }
+            return height / 2 + ((Math.random() - 0.5) * height) / 4;
+          })
+      )
       .force("collision", d3.forceCollide().radius(70));
 
     // Set initial positions based on layers
-    courses.forEach(course => {
+    courses.forEach((course) => {
       const layer = layers.get(course.CourseID) || 0;
       if (course.has_no_prerequisites) {
         course.x = width / 2;
         course.y = height / 2;
       } else {
-        course.x = (layer * width / 5) + 100;
-        course.y = height / 2 + (Math.random() - 0.5) * height / 4;
+        course.x = (layer * width) / 5 + 100;
+        course.y = height / 2 + ((Math.random() - 0.5) * height) / 4;
       }
     });
 
     // Reset zoom button
-    svg.append("rect")
+    svg
+      .append("rect")
       .attr("x", 10)
       .attr("y", 10)
       .attr("width", 80)
@@ -179,12 +205,11 @@ const CourseMap = () => {
       .attr("rx", 5)
       .style("cursor", "pointer")
       .on("click", () => {
-        svg.transition()
-          .duration(750)
-          .call(zoom.transform, d3.zoomIdentity);
+        svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
       });
 
-    svg.append("text")
+    svg
+      .append("text")
       .attr("x", 50)
       .attr("y", 30)
       .attr("text-anchor", "middle")
@@ -192,13 +217,12 @@ const CourseMap = () => {
       .text("Reset Zoom")
       .style("cursor", "pointer")
       .on("click", () => {
-        svg.transition()
-          .duration(750)
-          .call(zoom.transform, d3.zoomIdentity);
+        svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
       });
 
     // Define arrow marker with adjusted position
-    container.append("defs")
+    container
+      .append("defs")
       .append("marker")
       .attr("id", "arrow")
       .attr("viewBox", "0 -5 10 10")
@@ -212,7 +236,8 @@ const CourseMap = () => {
       .attr("fill", "#999");
 
     // Draw links with adjusted endpoints
-    const links = container.append("g")
+    const links = container
+      .append("g")
       .selectAll("line")
       .data(validPrerequisites)
       .enter()
@@ -223,13 +248,15 @@ const CourseMap = () => {
       .attr("marker-end", "url(#arrow)");
 
     // Create nodes (courses)
-    const nodes = container.append("g")
+    const nodes = container
+      .append("g")
       .selectAll("g")
       .data(courses)
       .enter()
       .append("g")
       .call(
-        d3.drag()
+        d3
+          .drag()
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended)
@@ -245,8 +272,8 @@ const CourseMap = () => {
         return "#fbbc05";
       })
       .attr("opacity", (d) => (d.is_taken ? 0.5 : 1))
-      .attr("stroke", d => d.has_no_prerequisites ? "#32CD32" : "none")
-      .attr("stroke-width", d => d.has_no_prerequisites ? STROKE_WIDTH : 0);
+      .attr("stroke", (d) => (d.has_no_prerequisites ? "#32CD32" : "none"))
+      .attr("stroke-width", (d) => (d.has_no_prerequisites ? STROKE_WIDTH : 0));
 
     // Add course IDs as text
     nodes
@@ -260,10 +287,15 @@ const CourseMap = () => {
     // Add tooltips with additional information
     nodes
       .append("title")
-      .text((d) =>
-        `${d.CourseID}\n${d.Course_Name}\n${
-          d.is_taken ? "Taken" : "Not taken"
-        }\n${d.has_no_prerequisites ? "No prerequisites required" : "Has prerequisites"}`
+      .text(
+        (d) =>
+          `${d.CourseID}\n${d.Course_Name}\n${
+            d.is_taken ? "Taken" : "Not taken"
+          }\n${
+            d.has_no_prerequisites
+              ? "No prerequisites required"
+              : "Has prerequisites"
+          }`
       );
 
     // Add click handler
@@ -321,12 +353,14 @@ const CourseMap = () => {
     }
 
     // Add zoom controls
-    const zoomControls = svg.append("g")
+    const zoomControls = svg
+      .append("g")
       .attr("class", "zoom-controls")
       .attr("transform", `translate(${width - 100}, 20)`);
 
     // Zoom in button
-    zoomControls.append("rect")
+    zoomControls
+      .append("rect")
       .attr("x", 0)
       .attr("y", 0)
       .attr("width", 30)
@@ -336,25 +370,23 @@ const CourseMap = () => {
       .attr("rx", 5)
       .style("cursor", "pointer")
       .on("click", () => {
-        svg.transition()
-          .duration(750)
-          .call(zoom.scaleBy, 1.3);
+        svg.transition().duration(750).call(zoom.scaleBy, 1.3);
       });
 
-    zoomControls.append("text")
+    zoomControls
+      .append("text")
       .attr("x", 15)
       .attr("y", 20)
       .attr("text-anchor", "middle")
       .text("+")
       .style("cursor", "pointer")
       .on("click", () => {
-        svg.transition()
-          .duration(750)
-          .call(zoom.scaleBy, 1.3);
+        svg.transition().duration(750).call(zoom.scaleBy, 1.3);
       });
 
     // Zoom out button
-    zoomControls.append("rect")
+    zoomControls
+      .append("rect")
       .attr("x", 40)
       .attr("y", 0)
       .attr("width", 30)
@@ -364,21 +396,18 @@ const CourseMap = () => {
       .attr("rx", 5)
       .style("cursor", "pointer")
       .on("click", () => {
-        svg.transition()
-          .duration(750)
-          .call(zoom.scaleBy, 0.7);
+        svg.transition().duration(750).call(zoom.scaleBy, 0.7);
       });
 
-    zoomControls.append("text")
+    zoomControls
+      .append("text")
       .attr("x", 55)
       .attr("y", 20)
       .attr("text-anchor", "middle")
       .text("-")
       .style("cursor", "pointer")
       .on("click", () => {
-        svg.transition()
-          .duration(750)
-          .call(zoom.scaleBy, 0.7);
+        svg.transition().duration(750).call(zoom.scaleBy, 0.7);
       });
   }, [courses, prerequisites]);
 
@@ -390,6 +419,9 @@ const CourseMap = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/studentpages/home">Back</Link>
+        </button>
       </div>
 
       <div className="course-search-container">
@@ -475,11 +507,6 @@ const CourseMap = () => {
         {/* D3 visualization container */}
         <div className="graph-container">
           <svg ref={svgRef}></svg>
-        </div>
-        <div className="button-group">
-          <button>
-            <Link to="/studentpages/home">Back</Link>
-          </button>
         </div>
       </div>
     </div>
