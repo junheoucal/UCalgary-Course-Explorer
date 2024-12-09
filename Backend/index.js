@@ -11,7 +11,7 @@ app.use(cors());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "junheo",
+  password: "m*ziLE4GD9YiCUHtgk-j",
   database: "coursedb",
 });
 
@@ -965,18 +965,22 @@ app.post("/studentpages/addmajor/:StudentID", (req, res) => {
   const { StudentID } = req.params;
 
   // First check if student already has this major
-  const checkQuery = "SELECT * FROM take_major WHERE StudentID = ? AND Major = ?";
+  const checkQuery =
+    "SELECT * FROM take_major WHERE StudentID = ? AND Major = ?";
   db.query(checkQuery, [StudentID, Major], (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Database error" });
     }
 
     if (results.length > 0) {
-      return res.status(409).json({ error: "You are already enrolled in this major" });
+      return res
+        .status(409)
+        .json({ error: "You are already enrolled in this major" });
     }
 
     // If no duplicate, proceed with insertion
-    const insertQuery = "INSERT INTO take_major (StudentID, Major) VALUES (?, ?)";
+    const insertQuery =
+      "INSERT INTO take_major (StudentID, Major) VALUES (?, ?)";
     db.query(insertQuery, [StudentID, Major], (err, data) => {
       if (err) {
         return res.status(500).json({ error: "Failed to add major" });
@@ -992,18 +996,22 @@ app.post("/studentpages/addminor/:StudentID", (req, res) => {
   const { StudentID } = req.params;
 
   // First check if student already has this minor
-  const checkQuery = "SELECT * FROM take_minor WHERE StudentID = ? AND Minor = ?";
+  const checkQuery =
+    "SELECT * FROM take_minor WHERE StudentID = ? AND Minor = ?";
   db.query(checkQuery, [StudentID, Minor], (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Database error" });
     }
 
     if (results.length > 0) {
-      return res.status(409).json({ error: "You are already enrolled in this minor" });
+      return res
+        .status(409)
+        .json({ error: "You are already enrolled in this minor" });
     }
 
     // If no duplicate, proceed with insertion
-    const insertQuery = "INSERT INTO take_minor (StudentID, Minor) VALUES (?, ?)";
+    const insertQuery =
+      "INSERT INTO take_minor (StudentID, Minor) VALUES (?, ?)";
     db.query(insertQuery, [StudentID, Minor], (err, data) => {
       if (err) {
         return res.status(500).json({ error: "Failed to add minor" });
