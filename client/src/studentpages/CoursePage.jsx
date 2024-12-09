@@ -86,7 +86,7 @@ const CoursePage = () => {
         return;
       }
 
-      navigate("/studentpages/home");
+      navigate("/studentpages/MyCourses");
     } catch (err) {
       if (err.response?.data?.type === "PREREQUISITES_NOT_MET") {
         setError(
@@ -109,7 +109,7 @@ const CoursePage = () => {
         return;
       }
 
-      navigate("/studentpages/home");
+      navigate("/studentpages/MyCourses");
     } catch (err) {
       console.error(
         "Error removing course:",
