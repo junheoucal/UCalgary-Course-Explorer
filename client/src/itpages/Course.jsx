@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthProvider";
 import "../stylepages/CourseList.css";
 
 const Course = () => {
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [department, setDepartment] = useState("ALL");
@@ -27,6 +29,16 @@ const Course = () => {
     fetchAllCourse();
   }, [searchTerm, department]);
 
+  const handleLogout = () => {
+    setAuth({
+      UCID: null,
+      userType: null,
+      isAuthenticated: false
+    });
+    navigate('/login');
+  };
+
+
   const handleDelete = async (CourseID) => {
     try {
       await axios.delete("http://localhost:8800/course/" + CourseID);
@@ -44,6 +56,7 @@ const Course = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>
 
       <h1> Course List </h1>
