@@ -8,18 +8,23 @@ const AddAntirequisite = () => {
   const [courses, setCourses] = useState([]);
   const [antirequisites, setAntirequisites] = useState([]);
   const { CourseID } = useParams();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [department, setDepartment] = useState("ALL");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch all courses
-        const coursesRes = await axios.get("http://localhost:8800/course");
+        const coursesRes = await axios.get("http://localhost:8800/course", {
+          params: {
+            searchTerm: searchTerm,
+            department: department,
+          },
+        });
         const filteredCourses = coursesRes.data.filter(
           (course) => course.CourseID !== CourseID
         );
         setCourses(filteredCourses);
 
-        // Fetch antirequisites
         const antireqRes = await axios.get(
           `http://localhost:8800/antirequisite/${CourseID}`
         );
@@ -29,7 +34,7 @@ const AddAntirequisite = () => {
       }
     };
     fetchData();
-  }, [CourseID]);
+  }, [CourseID, searchTerm, department]);
 
   const handleAddAntirequisite = async (conflictingCourseID) => {
     try {
@@ -37,7 +42,6 @@ const AddAntirequisite = () => {
         CourseID: CourseID,
         Conflicting_CourseID: conflictingCourseID,
       });
-      // Refresh antirequisites list
       const antireqRes = await axios.get(
         `http://localhost:8800/antirequisite/${CourseID}`
       );
@@ -54,7 +58,6 @@ const AddAntirequisite = () => {
       await axios.delete(
         `http://localhost:8800/antirequisite/${CourseID}/${conflictingCourseID}`
       );
-      // Refresh antirequisites list
       const antireqRes = await axios.get(
         `http://localhost:8800/antirequisite/${CourseID}`
       );
@@ -82,7 +85,6 @@ const AddAntirequisite = () => {
       <div style={{ padding: "20px" }}>
         <h1>Antirequisites for Course {CourseID}</h1>
 
-        {/* Current Antirequisites Section */}
         <div style={{ marginBottom: "40px" }}>
           <h2>Current Antirequisites</h2>
           <div
@@ -124,8 +126,38 @@ const AddAntirequisite = () => {
           </div>
         </div>
 
-        {/* Available Courses Section */}
         <h2>Add New Antirequisites</h2>
+        <div className="course-controls" style={{ marginBottom: "20px" }}>
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search courses..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: "8px",
+              marginRight: "10px",
+              borderRadius: "4px",
+              border: "1px solid #ddd"
+            }}
+          />
+
+          <select
+            name="department"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ddd"
+            }}
+          >
+            <option value="ALL">All Departments</option>
+            <option value="CPSC">CPSC</option>
+            <option value="MATH">MATH</option>
+          </select>
+        </div>
+
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {courses.map((course) => (
             <div
@@ -143,16 +175,15 @@ const AddAntirequisite = () => {
               <div>
                 <h2 style={{ margin: "0 0 10px 0" }}>{course.CourseID}</h2>
                 <h3 style={{ margin: "0 0 10px 0" }}>{course.Course_Name}</h3>
-                <p style={{ margin: "5px 0" }}>Level: {course.Level}</p>
+                <p style={{ margin: "5px 0" }}><strong>Level:</strong> {course.Level}</p>
                 <p style={{ margin: "5px 0" }}>
-                  Description: {course.Course_Description}
-                </p>
-                <p style={{ margin: "5px 0" }}>Credits: {course.Credits}</p>
-                <p style={{ margin: "5px 0" }}>
-                  Department: {course.Department_Name}
+                  <strong>Description:</strong> {course.Course_Description}
                 </p>
                 <p style={{ margin: "5px 0" }}>
-                  Concentration: {course.Concentration_Name}
+                  <strong>Credits:</strong> {course.Credits}
+                </p>
+                <p style={{ margin: "5px 0" }}>
+                  <strong>Department:</strong> {course.Department_Name}
                 </p>
               </div>
               <button

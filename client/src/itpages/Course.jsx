@@ -89,11 +89,10 @@ const Course = () => {
           <div className="course" key={course.CourseID}>
             <h2>{course.CourseID}</h2>
             <h3>{course.Course_Name}</h3>
-            <p>{course.Level} level</p>
-            <p>{course.Course_Description}</p>
-            <p>{course.Credits}</p>
-            <p>{course.Department_Name}</p>
-            <p>{course.Concentration_Name}</p>
+            <p><strong>Level:</strong> {course.Level}</p>
+            <p><strong>Description:</strong> {course.Course_Description}</p>
+            <p><strong>Credits:</strong> {course.Credits}</p>
+            <p><strong>Department:</strong> {course.Department_Name}</p>
             <button
               className="delete"
               onClick={() => handleDelete(course.CourseID)}
