@@ -14,7 +14,7 @@ function Home() {
       </div>
 
       <div className="main-content">
-        <h1 className="home-title">Course Search Engine</h1>
+        <h1 className="home-title">UCalgary Course Explorer</h1>
 
         <div className="login-container">
           <div className="student-section">
