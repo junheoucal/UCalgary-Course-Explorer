@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import "../stylepages/Register.css";
 
 function Register() {
@@ -60,6 +61,9 @@ function Register() {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/Home">Back</Link>
+        </button>
       </div>
 
       <h1>IT Staff Registration</h1>

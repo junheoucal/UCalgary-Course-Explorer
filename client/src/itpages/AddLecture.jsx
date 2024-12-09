@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const AddLecture = () => {
   const location = useLocation();
@@ -47,6 +48,9 @@ const AddLecture = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to={`/itpages/lecture/${CourseID}`}>Back</Link>
+        </button>
       </div>
 
       <div className="form">

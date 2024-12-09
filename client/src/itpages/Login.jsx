@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../stylepages/Login.css";
 
 function Login() {
@@ -53,6 +54,9 @@ function Login() {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/Home">Back</Link>
+        </button>
       </div>
 
       <div>

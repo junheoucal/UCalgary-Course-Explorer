@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../context/AuthProvider";
+import { Link } from "react-router-dom";
+import "../stylepages/Login.css";
 
 const LOGIN_URL = "/studentlogin";
 function Login() {
@@ -50,6 +52,9 @@ function Login() {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/Home">Back</Link>
+        </button>
       </div>
 
       <div>

@@ -52,6 +52,9 @@ const MyCourses = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/studentpages/home">Back</Link>
+        </button>
       </div>
 
       <div className="courses-container">
@@ -102,9 +105,6 @@ const MyCourses = () => {
             </div>
           ))}
         </div>
-        <button className="back-button">
-          <Link to="/studentpages/home">Back</Link>
-        </button>
       </div>
     </div>
   );

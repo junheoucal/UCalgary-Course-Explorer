@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import "../stylepages/AddCourse.css";
 
 const Add = () => {
@@ -39,6 +40,9 @@ const Add = () => {
           alt="University of Calgary Logo"
           className="ucalgary-logo"
         />
+        <button className="back-btn">
+          <Link to="/itpages/course">Back</Link>
+        </button>
       </div>
       <div className="form">
         <h1> Add New Course</h1>
