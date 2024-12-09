@@ -12,6 +12,8 @@ You will need `node` and `npm` installed on your machine, as well as MySQL.
 Run one of the SQL scripts in `SQL Script`. 
 `471PopulatedCourseDB.sql` Has sample information filled in, with courses from CPSC and MATH departments. `471SQLStructure.sql` only contains the structure, and will need to be populated.
 
+In `backend/index.js`, line 14, edit the password and database name according to your own SQL server.
+
 In both the `client` and `backend` folders,
 
 `npm install`
