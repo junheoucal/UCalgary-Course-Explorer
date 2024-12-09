@@ -815,6 +815,26 @@ app.get("/studentpages/PastCourses", (req, res) => {
   });
 });
 
+app.get("/course/sections/:CourseID", (req, res) => {
+  const { CourseID } = req.params;
+  const q = `
+    SELECT 'Lecture' as type, LectureID as SectionID, Semester_Name, Days, Start_time, End_time, 
+           Building_Name, Room_Location, Enrollment_Current_Number, Enrollment_Limit
+    FROM lecture 
+    WHERE CourseID = ?
+    UNION ALL
+    SELECT 'Tutorial' as type, TutorialNo as SectionID, semester_name as Semester_Name, Days, Start_time, End_time,
+           Building_Name, Room_Location, Enrollment_Current_Number, Enrollment_Limit
+    FROM tutorial
+    WHERE CourseID = ?
+    ORDER BY Semester_Name, type, SectionID`;
+
+  db.query(q, [CourseID, CourseID], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+});
+
 // Get required courses for a minor and their completion status
 app.get("/studentpages/MinorRequirements/:Minor/:StudentID", (req, res) => {
   const { Minor, StudentID } = req.params;

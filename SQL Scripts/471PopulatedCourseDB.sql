@@ -174,7 +174,7 @@ CREATE TABLE `lecture` (
   `Days` varchar(5) DEFAULT NULL,
   `Start_time` time DEFAULT NULL,
   `End_time` time DEFAULT NULL,
-  PRIMARY KEY (`LectureID`,`CourseID`),
+  PRIMARY KEY (`LectureID`,`CourseID`,`Semester_Name`),
   KEY `CourseID` (`CourseID`),
   KEY `Semester_Name` (`Semester_Name`),
   CONSTRAINT `lecture_ibfk_1` FOREIGN KEY (`CourseID`) REFERENCES `course` (`CourseID`) ON DELETE CASCADE ON UPDATE CASCADE,

@@ -102,9 +102,6 @@ const MyCourses = () => {
             </div>
           ))}
         </div>
-        <button className="back-button">
-          <Link to="/studentpages/home">Back</Link>
-        </button>
       </div>
     </div>
   );
