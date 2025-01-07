@@ -1,4 +1,4 @@
-## CPSC471 Final Project - UCalgary Course Explorer
+## UCalgary Course Explorer
 
 A web app that explores the different courses offered at the University of Calgary
 
