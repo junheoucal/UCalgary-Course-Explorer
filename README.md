@@ -2,6 +2,8 @@
 
 A web app that explores the different courses offered at the University of Calgary
 
+Currently not deployed - Visit the User Manual for more details!
+
 ## Installation and Setup Instructions
 
 Clone this repository to your machine. 
